@@ -29,5 +29,5 @@ projet) :
 
 1. Aller sur https://github.com/anthonyamiard/Nurikabe
 2. Cliquer sur _New Pull Request_
-3. Clique sur _compare accross forks_
+3. Cliquer sur _compare accross forks_
 4. Décrivez vos modifications et soumettez-les
