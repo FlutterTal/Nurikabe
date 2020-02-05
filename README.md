@@ -1,2 +1,2 @@
 # Nurikabe
-Projet Génie Logiciel 2
+Projet Génie Logiciel 2.
