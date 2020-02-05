@@ -7,10 +7,11 @@ Groupe 1
 
 ### Mise en place initiale
 
-1. Forker https://github.com/anthonyamiard/Nurikabe (Bouton _Fork_ en haut à
-   gauche).
-2. Cloner votre fork (`git clone https://github.com/MON_PSEUDO/Nurikabe.git`,
-   remplacer `MON_PSEUDO` par votre nom d'utilisateur).
+1. _À effectuer une seule fois par compte GitHub_ Forker
+   https://github.com/anthonyamiard/Nurikabe (Bouton _Fork_ en haut à gauche).
+2. _À effectuer une fois par machine_ Cloner votre fork (
+   `git clone https://github.com/MON_PSEUDO/Nurikabe.git`, remplacer
+   `MON_PSEUDO` par votre nom d'utilisateur).
 3. Dans votre dossier de projet, exécuter
    `git remote add upstream https://github.com/anthonyamiard/Nurikabe.git`.
 
