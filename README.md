@@ -9,7 +9,7 @@ Groupe 1
 
 1. Forker https://github.com/anthonyamiard/Nurikabe (Bouton _Fork_ en haut à
    gauche).
-2. Cloner votre fork (`git clone https://github.com/MON_PSEUDO/Nurikabe`,
+2. Cloner votre fork (`git clone https://github.com/MON_PSEUDO/Nurikabe.git`,
    remplacer `MON_PSEUDO` par votre nom d'utilisateur).
 3. Dans votre dossier de projet, exécuter
    `git remote add upstream https://github.com/anthonyamiard/Nurikabe.git`.
@@ -30,4 +30,9 @@ projet) :
 1. Aller sur https://github.com/anthonyamiard/Nurikabe
 2. Cliquer sur _New Pull Request_
 3. Cliquer sur _compare accross forks_
-4. Décrivez vos modifications et soumettez-les
+4. Décrivez vos modifications et soumettez-les.
+
+### Plus d'informations
+
+* [Fork a repo - GitHub Help](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
+* [Syncing a fork - GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
