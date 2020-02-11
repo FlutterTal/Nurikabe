@@ -1,52 +1,54 @@
 require_relative 'Case.rb'
 require_relative 'CaseNumero.rb'
 require_relative 'CaseJouable.rb'
+require_relative 'Grille'
 
-class GrilleStatique
-  attr_reader :taille, :numero, :fichier, :grille
-  private_class_method :new
+class GrilleStatique < Grille
+    attr_reader :taille_ligne, :taille_colonne, :numero, :grilleS
+    private_class_method :new
 
-  def GrilleStatique.creer(unNumero, unFichier)
+    def GrilleStatique.creer(unNumero, unFichier)
     new(unNumero, unFichier)
-  end
+    end
 
-  def initialize(unNumero, unFichier)
-    @grille = Array.new
+    def initialize(unNumero, unFichier)
+    @grilleS = Grille.new
     ligneGrille = Array.new
 
-    @numero, @fichier = unNumero, unFichier
-    fichierGrille = File.new(fichier, "r")
+    @numero = unNumero
+    fichierGrille = File.new(unFichier, "r")
     ligneFichier = fichierGrille.readlines[@numero-1]
     fichierGrille.close
 
     grille = ligneFichier.split(';')
-    @taille = grille[0].to_i
-    ligneGrille.shift
+    @taille_ligne = grille[0].to_i
+    @taille_colonne = grille[1].to_i
+    grille.shift
+    grille.shift
 
-    grille.each{ |l|
-      ligne = l.split(//).each { |item|
+    grille.each { |ligne|
+        newLingne = ligne.split(//).each { |item|
         if(item.to_i != 0)
-          ligneGrille.push(CaseNumero.creer(item,@grille.length,ligneGrille.length))
+            ligneGrille.push(CaseNumero.creer(item,@grilleS.grille.length,ligneGrille.length))
         else
-          ligneGrille.push(CaseJouable.creer(item,@grille.length,ligneGrille.length))
+            ligneGrille.push(CaseJouable.creer(item,@grilleS.grille.length,ligneGrille.length))
         end
-      }
-      @grille.push(Array.new(ligneGrille))
-      ligneGrille.clear
+        }
+        @grilleS.grille.push(Array.new(ligneGrille))
+        ligneGrille.clear
     }
-  end
+    end
 
-  def case_plateau(l,c)
-      return self.grille[l][c]
-  end
+    def case_plateau(l,c)
+        return self.grilleS.grille[l][c]
+    end
 
-  def to_s()
-    str = ""
-    @grille.each { |ligne|
-      ligne.each{ |cases| str += cases.type}
-      str += "\n"
-    }
-    return str + "\n"
-  end
-
+    def to_s()
+        str = ""
+        @grilleS.grille.each { |ligne|
+            ligne.each{ |cases| str += cases.to_s}
+            str +="\n"
+        }
+        return str + "\n"
+    end
 end
