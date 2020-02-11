@@ -11,18 +11,18 @@ class Historique
 		@fichier = File.new("Hist_#{utilisateur}_#{grille}", "r+")
 		if @fichier.empty? do
 			@historique = Array.new
+			@index = -1
 		else
 			@historique = Marshal.load(@fichier)
+			@index = @historique.size
 		end
-		@index = -1
 	end
 
 	def sauvegarder(case, etat_avant, etat_apres)
-		@index += 1
 		unless fin? do
-			@historique.slice!(@index..)
+			@historique.slice!(@index+1..)
 		end
-		@historique[@index] = HistoriqueElement.Creer(case, etat_avant, etat_apres)
+		suivant = HistoriqueElement.Creer(case, etat_avant, etat_apres)
 		Marshal.dump(@historique, @fichier)
 		@fichier.fdatasync
 		return self
