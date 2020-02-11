@@ -6,12 +6,6 @@ class CaseJouable < Case
     
     @@etatPossible = {:NOIR => 'N', :BLANC => 'B', :MARK => 'M'}
 
-    module Etat
-        NOIR = 'N'
-        BLANC = 'B'
-        MARK = 'M'
-    end
-
     def CaseJouable.creer(etat, l, c)
         new(etat, l, c)
     end
@@ -23,5 +17,9 @@ class CaseJouable < Case
 
     def to_s
         return @@etatPossible[self.etatCase]
+    end
+
+    def restorCase()
+        self.etatCase = @@etatPossible.key('B')
     end
 end

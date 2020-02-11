@@ -2,7 +2,7 @@ require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
 
 class GrilleJouable < Grille
-    attr_reader :erreur, :locErreur
+    attr_reader :erreur, :locErreur, :grille, :solution
     private_class_method :new
 
     def GrilleJouable.creer(unNumero, unFichier)
@@ -13,7 +13,7 @@ class GrilleJouable < Grille
         @solution = GrilleStatique.creer(unNumero, unFichier)
         @grille = Grille.new()
         ligneGrille = Array.new()
-
+    
         @solution.grilleS.grille.each { |ligne|
             ligne.each{ |cases|
                 if cases.class != CaseNumero
@@ -35,14 +35,24 @@ class GrilleJouable < Grille
             @solution.taille_colonne.times do |c|
                 if @solution.grilleS.grille[l][c].class == CaseJouable && @solution.grilleS.grille[l][c].etatCase != self.grille.grille[l][c].etatCase
                     @erreur += 1
-                    @locErreur.push(@solution.grilleS.grille[l][c])
+                    @locErreur.push([l,c])
                 end
             end
         end
     end
 
+    def reinitialiserGrille()
+        @grille.grille.each { |ligne|
+            ligne.each{ |cases|
+                if cases.class != CaseNumero
+                    cases.restorCase()
+                end
+            }
+        }
+    end
+
     def grilleTerminee
-        return self.nombreErreur == 0
+        return self.erreur == 0
     end
 
     def to_s()
