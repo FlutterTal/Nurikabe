@@ -8,7 +8,7 @@ class Historique
 	end
 
 	def initialize(utilisateur, grille)
-		@fichier = File.new("Hist_#{utilisateur}_#{grille}")
+		@fichier = File.new("Hist_#{utilisateur}_#{grille}", "r+")
 		if @fichier.empty? do
 			@historique = Array.new
 		else
