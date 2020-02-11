@@ -14,6 +14,6 @@ class CaseNumero < Case
     end
 
     def to_s()
-        return @numero
+        return self.numero
     end
 end
