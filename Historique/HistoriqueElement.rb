@@ -9,7 +9,10 @@ class HistoriqueElement
     end
 
     def initialize(case, etat_avant, etat_apres)
-        @case, @etat_avant, @etat_apres, @erreur = case, etat_avant, etat_apres, Erreur.verif_case(case)
+        @case = case
+        @etat_avant = etat_avant
+        @etat_apres = etat_apres
+        @erreur = Erreur.verif_case(case)
     end
 
 end
