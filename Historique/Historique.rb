@@ -29,12 +29,12 @@ class Historique
 	# Ajoute un nouvel élément à l'historique
 	#
 	# Met à jour l'objet ET le fichier de sauvegarde
-	def sauvegarder(case, etat_avant, etat_apres)
+	def sauvegarder(cases, etat_avant, etat_apres)
 		unless fin?
-			@historique.slice!(@index+1..)
+			@historique.slice!(@index+1..@historique.size)
 		end
 		# peut-être besoin de parenthèses
-		suivant = HistoriqueElement.Creer(case, etat_avant, etat_apres)
+		suivant = HistoriqueElement.Creer(cases, etat_avant, etat_apres)
 		#@fichier.truncate(0)
 		Marshal.dump(@historique, @fichier)
 		@fichier.fdatasync
