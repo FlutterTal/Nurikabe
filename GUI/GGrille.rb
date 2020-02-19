@@ -19,9 +19,7 @@ module Gui
         # [+grille+]  Grille
         def GGrille.creer(grille)
             g = new
-            iligne = 0
             grille.grille.grille.each do |ligne|
-                icase = 0
                 ligne.each do |c|
                     gc = nil
                     if(c.kind_of? CaseJouable)
@@ -30,13 +28,10 @@ module Gui
                     elsif(c.kind_of? CaseNumero) then
                         gc = GCaseNumero.creer(c)
                     else
-                        raise "Classe invalide pour la case " +
-                              "(#{iligne}, #{icase}) : #{c.class}"
+                        raise "Classe invalide pour la case #{c.class}"
                     end
-                    g.attach(gc, icase, iligne, 1, 1)
-                    icase += 1
+                    g.attach(gc, c.colonne, c.ligne, 1, 1)
                 end
-                iligne += 1
             end
             return g
         end

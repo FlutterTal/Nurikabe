@@ -16,6 +16,18 @@ module Gui
             gc = new
             gc.case = c
             gc.maj_etat
+            
+            gc.signal_connect("clicked") do |gc|
+                case gc.case.etatCase
+                when :BLANC then gc.case.etatCase = :NOIR
+                when :NOIR then gc.case.etatCase = :MARK
+                when :MARK then gc.case.etatCase = :BLANC
+                else raise "État de la case (#{gc.case.ligne}, " +
+                           "#{gc.case.colonne}) inconnu : #{gc.case}"
+                end
+                gc.maj_etat
+            end
+                
             return gc
         end
         
