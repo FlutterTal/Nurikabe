@@ -16,6 +16,15 @@ module Gui
             gc = new
             gc.case = c
             gc.maj_etat
+            gc.signal_connect("clicked") do |gc|
+                if(gc.case.etatCase == :NOIR || gc.case.etatCase == :MARK) then
+                    gc.case.etatCase = :BLANC
+                else
+                    gc.case.etatCase = :NOIR
+                end
+                gc.maj_etat
+            end
+                
             return gc
         end
         
