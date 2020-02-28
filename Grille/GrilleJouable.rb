@@ -1,25 +1,30 @@
 require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
 
+require_relative '../Utilisateur/Utilisateur.rb'
+=begin
+require_relative '../Historique/Historique.rb'
+=end
+
 class GrilleJouable < Grille
     attr_reader :erreur, :locErreur, :grille, :solution
     private_class_method :new
 
-    def GrilleJouable.creer(unNumero, unFichier)
-        new(unNumero, unFichier)
+    def GrilleJouable.creer(unNumero)
+        new(unNumero)
     end
 
-    def initialize(unNumero, unFichier)
-        @solution = GrilleStatique.creer(unNumero, unFichier)
+    def initialize(unNumero)
+        @solution = GrilleStatique.creer(unNumero)
         @grille = Grille.new()
         ligneGrille = Array.new()
-    
+        
         @solution.grilleS.grille.each { |ligne|
             ligne.each{ |cases|
                 if cases.class != CaseNumero
                     ligneGrille.push(CaseJouable.creer("B",@grille.grille.length,ligneGrille.length))
                 else
-                    ligneGrille.push(CaseNumero.creer(cases.numero,@grille.grille.length,ligneGrille.length))
+                    ligneGrille.push(cases)
                 end   
             }
             @grille.grille.push(Array.new(ligneGrille))
@@ -51,8 +56,20 @@ class GrilleJouable < Grille
         }
     end
 
+=begin
+A TESTER
+    def chargerGrille(unUtilisateur)
+        Historique.Ouvrir(unUtilisateur, self.grille).replay{ |c| self.grille.grille.case[c.ligne][[c.colonne].etatCase = c.etat_apres}       
+    end
+=end
+
     def grilleTerminee
         return self.erreur == 0
+    end
+
+    def donnePoint(unUtilisateur)
+        unUtilisateur.credit += 5
+        return self
     end
 
     def to_s()
