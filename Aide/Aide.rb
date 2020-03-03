@@ -1,4 +1,6 @@
 require_relative 'StartingTechniques.rb'
+require_relative 'BasicTechniques.rb'
+require_relative 'AdvancedTechniques.rb'
 
 class Aide
 
@@ -17,6 +19,8 @@ class Aide
       StartingTechniques.case1(grille)
       StartingTechniques.caseVide(grille)
       StartingTechniques.caseDiag(grille)
+      BasicTechniques.caseVideEntoure(grille)
+      BasicTechniques.largeurMur(grille)
     end
 
 end
