@@ -39,5 +39,9 @@ module Gui
 end
 
 Gtk.init if Gtk.respond_to?(:init)
+	provider = Gtk::CssProvider.new
+	screen = Gdk::Display.default.default_screen
+	Gtk::StyleContext.add_provider_for_screen(screen, provider, 20000)
+	provider.load(path: "GUI/grille.css")
     fenetre = Gui::GGrilleTest.creer(GrilleJouable.creer(1))
 Gtk.main

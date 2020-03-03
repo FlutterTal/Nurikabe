@@ -20,6 +20,7 @@ module Gui
             super
             self.width_request = TAILLE
             self.height_request = TAILLE
+			self.style_context.add_class("case")
             self.show
         end
     
