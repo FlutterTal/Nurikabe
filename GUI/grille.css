@@ -27,7 +27,37 @@
 }
 
 .case_erreur {
-	background: rgb(255, 100, 100);
+	animation-duration: 1.5s;
+	animation-iteration-count: infinite;
+	animation-name: erreur_blanche;
+}
+
+.case_erreur.case_noire {
+	animation-name: erreur_noire;
+}
+
+@keyframes erreur_blanche {
+	0% {
+		background-color: white;
+	}
+	50% {
+		background-color: rgb(255, 100, 100);
+	}
+	100% {
+		background-color: white;
+	}
+}
+
+@keyframes erreur_noire {
+	0% {
+		background-color: black;
+	}
+	50% {
+		background-color: rgb(255, 25, 25);
+	}
+	100% {
+		background-color: black;
+	}
 }
 
 .case_aide {

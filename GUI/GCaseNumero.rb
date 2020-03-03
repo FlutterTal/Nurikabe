@@ -15,7 +15,7 @@ module Gui
             gc = new
             gc.case = c
             gc.label = c.numero
-			gc.style_context.add_class("case_erreur")
+			gc.style_context.add_class("case_numero")
             return gc
         end
         
