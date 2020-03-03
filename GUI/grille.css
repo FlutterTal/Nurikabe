@@ -25,3 +25,11 @@
 .case_numero:hover {
 	background: white;
 }
+
+.case_erreur {
+	background: rgb(255, 100, 100);
+}
+
+.case_aide {
+	background: rgb(255, 200, 100);
+}
