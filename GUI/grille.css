@@ -6,22 +6,22 @@
 	font-size: 32px;
 }
 
-.case:hover, .case:focus {
+.case:hover {
 	background: rgb(220,220,255);
+}
+
+.case:focus {
+	border-color: rgb(100, 100, 255);
 }
 
 .case_noire {
 	background: black;
 }
 
-.case_noire:hover, .case_noire:focus {
+.case_noire:hover {
 	background: rgb(10, 10, 100);
 }
 
 .case_numero:hover {
 	background: white;
-}
-
-.case_numero:focus {
-	background: rgb(240, 240, 255)
 }

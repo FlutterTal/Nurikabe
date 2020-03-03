@@ -46,20 +46,23 @@ module Gui
         
         # Marque la case comme noire
         def marquer_noire
-            # self.label = 'X'
+            self.label = ''
             self.style_context.add_class("case_noire")
+            self.style_context.remove_class("case_marquee")
         end
         
         # Marque la case comme blanche
         def marquer_blanche
             self.label = ''
             self.style_context.remove_class("case_noire")
+            self.style_context.remove_class("case_marquee")
         end
         
         # Marque la case comme marquée
         def marquer_point
-            self.label = '·'
+            self.label = '▪'
             self.style_context.remove_class("case_noire")
+            self.style_context.add_class("case_marquee")
 
         end
         
