@@ -9,7 +9,7 @@ module Historique
     class HistoriqueElement
         attr_reader :cases, :etat_avant, :etat_apres, :erreur
         private_class_method :new
-    
+
         ##
         # Crée un élément de l'historique
         #
@@ -17,16 +17,15 @@ module Historique
         def HistoriqueElement.Creer(cases, etat_avant, etat_apres)
             new(cases, etat_avant, etat_apres)
         end
-    
+
         ##
         # Initialise l'élément et vérifie la validité du nouvel état
         def initialize(cases, etat_avant, etat_apres)
             @cases = cases
             @etat_avant = etat_avant
             @etat_apres = etat_apres
-            # METTRE A JOUR PLUS TARD
-            @erreur = (cases)
+            @erreur = verifCase(cases)
         end
-    
+
     end
 end
