@@ -39,5 +39,5 @@ module Gui
 end
 
 Gtk.init if Gtk.respond_to?(:init)
-    fenetre = Gui::GGrilleTest.creer(GrilleJouable.creer(1, "../test.txt"))
+    fenetre = Gui::GGrilleTest.creer(GrilleJouable.creer(1))
 Gtk.main
