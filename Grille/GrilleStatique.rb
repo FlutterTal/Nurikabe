@@ -30,7 +30,7 @@ class GrilleStatique < Grille
             newLingne = ligne.split(//).each { |item|
             if(item.to_i != 0)   
                 ligneGrille.push(CaseNumero.creer(item,@grilleS.grille.length,ligneGrille.length))
-            else
+            elsif(item == 'B' || item == 'N')
                 ligneGrille.push(CaseJouable.creer(item,@grilleS.grille.length,ligneGrille.length))
             end
             }
