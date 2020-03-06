@@ -3,11 +3,9 @@
 
 class BasicTechniques
 
-=begin
-Surrounded square
-Since these squares are surrounded by walls horizontally and vertically they cannot belong to an island and must therefore be shaded to be part of a wall
-=end
-  def BasicTechniques.caseVideEntoure(grille, tabHach)
+# Surrounded square
+# Since these squares are surrounded by walls horizontally and vertically they cannot belong to an island and must therefore be shaded to be part of a wall
+  def BasicTechniques.caseVideEntoure(grille, tab)
     taille_colonne = grille.solution().taille_colonne()
     taille_ligne = grille.solution().taille_ligne()
     tabJeu = grille.grille().grille() # Array
@@ -73,7 +71,7 @@ Since these squares are surrounded by walls horizontally and vertically they can
           # ***** Test final *****
 
           if (nbVoisins == nbVoisinsNoir)
-            tabHach[tabJeu[i][j]] = "Surrounded square"
+            tab.push(Aide.creer(tabJeu[i][j], "Surrounded square"))
           end
 
         end
@@ -83,11 +81,9 @@ Since these squares are surrounded by walls horizontally and vertically they can
 
   end
 
-=begin
-Avoiding wall area of 2x2
-According to the rules it is not allowed to have wall areas of 2x2 or larger.
-=end
-  def BasicTechniques.largeurMur(grille, tabHach)
+# Avoiding wall area of 2x2
+# According to the rules it is not allowed to have wall areas of 2x2 or larger.
+  def BasicTechniques.largeurMur(grille, tab)
     taille_colonne = grille.solution().taille_colonne()
     taille_ligne = grille.solution().taille_ligne()
     tabJeu = grille.grille().grille() # Array
@@ -96,7 +92,7 @@ According to the rules it is not allowed to have wall areas of 2x2 or larger.
       (0..(taille_ligne - 2)).each { |j| # Parcours colonne
         if (tabJeu[i][j].class == CaseJouable) && (tabJeu[i+1][j+1].class == CaseJouable) && (tabJeu[i][j+1].class == CaseJouable) && (tabJeu[i+1][j].class == CaseJouable)
           if (tabJeu[i][j].etatCase() == :NOIR) && (tabJeu[i+1][j+1].etatCase() == :NOIR) && (tabJeu[i][j+1].etatCase() == :NOIR) && (tabJeu[i+1][j].etatCase() == :NOIR)
-            tabHach[tabJeu[i][j]] = "Mur trop large >= 2x2"
+            tab.push(Aide.creer(tabJeu[i][j], "Mur trop large >= 2x2"))
           end
         end
       }
