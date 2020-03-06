@@ -6,7 +6,7 @@ module Historique
     #
     # Il représente le changement d'état d'une case ainsi que la validité du nouvel état
     # Tous ses attributs sont en lecture seule
-    class HistoriqueElement
+    class HHistoriqueElement
         attr_reader :case_jeu, :etat_avant, :etat_apres, :erreur
         private_class_method :new
 

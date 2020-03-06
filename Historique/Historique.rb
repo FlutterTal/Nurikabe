@@ -5,7 +5,7 @@ module Historique
 	# Un historique de partie
 	#
 	# Il contient une liste de HistoriqueElement
-	class Historique
+	class HHistorique
 		private_class_method :new
 
 		##
