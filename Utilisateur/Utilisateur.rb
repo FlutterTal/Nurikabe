@@ -2,31 +2,46 @@ class Utilisateur
   private_class_method :new
   attr_reader :nom ,:credit
  
-  def Utilisateur.creer(credit)
-    new(credit)
+  def Utilisateur.creer()
+    new()
   end
 
-  def initialize(credit)
-    puts("Saisir votre pseudo")
+  def initialize()
+    loop{
+    puts("Saisir votre nom")
     @nom = gets
     @credit = 0
-    @fichier = 'BDD_User.txt'
-    fichierUtilisateur = File.open('BDD_User.txt','a+')
+    break if(!verifNom(@nom))
+    puts("Nom déjà pris")
+    }
+    fichierUtilisateur = File.open(@nom,'w')
     fichierUtilisateur.puts("#{@nom}#{@credit}")
     fichierUtilisateur.close
   end
 
+  def verifNom(nom)
+    return File.exist?(nom)
+  end
+
   def supprimerUtilisateur()
-    tabUser = File.open('BDD_User.txt', 'r').readlines
-    fichierUtilisateur = File.open('BDD_User.txt','w')
-    i = 0
-    while i<= tabUser.size
-      if("#{@nom}"==tabUser[i])
-        i=i+2
-      end
-      fichierUtilisateur.puts(tabUser[i],tabUser[i+1])
-      i = i+2
+    File.delete(@nom)
+  end
+
+  def modifCredit(nom,montant)
+    donnees = ''
+    fichierUtilisateur = File.open(nom, 'r')
+    fichierUtilisateur.each {|ligne|
+    if fichierUtilisateur.lineno == 2
+        ligne = ligne + montant.to_s
     end
+ 
+    donnees += ligne
+    }
+ 
+    fichierUtilisateur.close
+ 
+    fichierUtilisateur = File.open(nom, 'w+')
+    fichierUtilisateur.write(donnees)
     fichierUtilisateur.close
   end
 
@@ -38,7 +53,7 @@ class Utilisateur
     if (tabUser.size==0)
       return -1
     else
-      while i<= tabUser.size
+      while (i<= tabUser.size)
         if(nom==tabUser[i])
           return 1
         end
@@ -49,6 +64,7 @@ class Utilisateur
     return 0
   end
 
+# WAIT CLASSEMENT
   def tempsMoyen()
     @niveauTermine = 0
     for n in (0..Grille.lenght)
