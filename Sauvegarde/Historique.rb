@@ -1,11 +1,11 @@
 require_relative 'HistoriqueElement.rb'
 
-module Historique
+module Sauvegarde
 	##
 	# Un historique de partie
 	#
 	# Il contient une liste de HistoriqueElement
-	class HHistorique
+	class Historique
 		private_class_method :new
 
 		##
