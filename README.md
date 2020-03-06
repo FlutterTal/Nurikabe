@@ -38,3 +38,7 @@ projet) :
 
 * [Fork a repo - GitHub Help](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
 * [Syncing a fork - GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
+
+## Les programmes exécutables
+
+* Une grille de jeu interactive : `./GUI/GrilleTest.rb`

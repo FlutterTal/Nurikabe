@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'gtk3'
 require_relative 'GGrille.rb'
 require_relative '../Grille/GrilleJouable.rb'
@@ -9,7 +11,7 @@ module Gui
     #
     # Représente une fenêtre contenant une Gui::GGrille.
 	#
-	# Pour lancer le script : <tt>ruby GUI/GrilleTest.rb</tt> depuis la racine
+	# Pour lancer le script : <tt>./GUI/GrilleTest.rb</tt> depuis la racine
 	# du dépôt.
     class GrilleTest < Gtk::Window
         
