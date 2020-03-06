@@ -8,17 +8,20 @@ module Gui
     # Application de test pour Gui::GGrille.
     #
     # Représente une fenêtre contenant une Gui::GGrille.
-    class GGrilleTest < Gtk::Window
+	#
+	# Pour lancer le script : <tt>ruby GUI/GrilleTest.rb</tt> depuis la racine
+	# du dépôt.
+    class GrilleTest < Gtk::Window
         
         private_class_method :new
         
         ##
-        # Crée une fenêtre contenant une Gui::Grille représentant la Grille
+        # Crée une fenêtre contenant une Gui::GGrille représentant la Grille
         # donnée.
         #
         # Paramètres :
         # [+grille+]  Grille
-        def GGrilleTest.creer(grille)
+        def GrilleTest.creer(grille)
             f = new
             
             f.set_title("Nurikabe")
@@ -43,5 +46,5 @@ Gtk.init if Gtk.respond_to?(:init)
 	screen = Gdk::Display.default.default_screen
 	Gtk::StyleContext.add_provider_for_screen(screen, provider, 20000)
 	provider.load(path: "GUI/grille.css")
-    fenetre = Gui::GGrilleTest.creer(GrilleJouable.creer(1))
+    fenetre = Gui::GrilleTest.creer(GrilleJouable.creer(1))
 Gtk.main

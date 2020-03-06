@@ -38,7 +38,9 @@ module Gui
         end
         
         ##
-        # Initialise une grille.
+        # Initialise la grille.
+        #
+        # Méthode privée, utiliser Gui::GGrille.creer pour créer une grille.
         def initialize
             super
             self.show
