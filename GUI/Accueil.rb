@@ -1,6 +1,6 @@
 require 'gtk3'
 
-module gui
+module Gui
 
     class Accueil < Gtk:Window
         def Accueil.creer
