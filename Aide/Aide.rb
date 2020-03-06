@@ -1,26 +1,15 @@
 require_relative 'StartingTechniques.rb'
 require_relative 'BasicTechniques.rb'
-require_relative 'AdvancedTechniques.rb'
 
 class Aide
 
-    # Instancier si erreur detecter
-    def initialize(c, technique)
-      @case = c
-      @technique = technique # Chaine de caractete
-    end
-
-    def update_credit()
-
-    end
-
     # Méthode statique => Verification
-    def Aide.detecter(grille)
-      StartingTechniques.case1(grille)
-      StartingTechniques.caseVide(grille)
-      StartingTechniques.caseDiag(grille)
-      BasicTechniques.caseVideEntoure(grille)
-      BasicTechniques.largeurMur(grille)
+    def Aide.detecter(grille, tabHach)
+      StartingTechniques.case1(grille, tabHach)
+      StartingTechniques.caseVide(grille, tabHach)
+      StartingTechniques.caseDiag(grille, tabHach)
+      BasicTechniques.caseVideEntoure(grille, tabHach)
+      BasicTechniques.largeurMur(grille, tabHach)
     end
 
 end
