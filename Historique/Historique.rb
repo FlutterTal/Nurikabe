@@ -10,12 +10,20 @@ module Historique
 
 		##
 		# Ouvre un historique pour un utilisateur et une grille
+		#
+		# Paramètres :
+		# [+utilisateur+] Utilisateur
+		# [+grille+] GrilleStatique
 		def Historique.Ouvrir(utilisateur, grille)
 			new(utilisateur, grille)
 		end
 
 		##
 		# Crée le fichier correspondant à l'historique de la partie ou ouvre celui déjà existant
+		#
+		# Paramètres :
+		# [+utilisateur+] Utilisateur
+		# [+grille+] GrilleStatique
 		def initialize(utilisateur, grille)
 			@fichier = File.new("Hist_#{utilisateur.nom}_#{grille.solution.numero}", "r+")
 			if @fichier.empty? 
@@ -30,12 +38,17 @@ module Historique
 		# Ajoute un nouvel élément à l'historique
 		#
 		# Met à jour l'objet ET le fichier de sauvegarde
-		def sauvegarder(cases, etat_avant, etat_apres)
+		#
+		# Paramètres :
+		# [+case_jeu+] CaseJouable
+		# [+etat_avant+] CaseJouable::etatPossible 
+		# [+etat_apres+] CaseJouable::etatPossible
+		def sauvegarder(case_jeu, etat_avant, etat_apres)
 			unless fin?
 				@historique.slice!(@index+1..@historique.size)
 			end
 			# peut-être besoin de parenthèses
-			suivant = HistoriqueElement.Creer(cases, etat_avant, etat_apres)
+			suivant = HistoriqueElement.Creer(case_jeu, etat_avant, etat_apres)
 			#@fichier.truncate(0)
 			Marshal.dump(@historique, @fichier)
 			@fichier.fdatasync
