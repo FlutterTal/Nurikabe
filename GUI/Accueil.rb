@@ -2,7 +2,7 @@ require 'gtk3'
 
 module Gui
 
-    class Accueil < Gtk:Window
+    class Accueil < Gtk::Window
         def Accueil.creer
             fenetre = new
             fenetre.set_title("Nurikabe")
