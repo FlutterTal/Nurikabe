@@ -7,6 +7,7 @@ module Gui
             table = new(6, 2, true)
             table.attach("Utilisateur", 0, 1, 0, 1)
             table.attach("Temps", 1, 2, 0, 1)
+            table.show
             return table
         end
     end
