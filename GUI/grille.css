@@ -1,65 +1,76 @@
+.grille {
+    border: 2px solid black;
+    border-radius: 0px;
+}
+
 .case {
-	background: white;
-	border: 2px solid black;
-	border-radius: 0px;
-	color: black;
-	font-size: 32px;
+    background: white;
+    border: 2px solid black;
+    border-radius: 0px;
+    color: black;
+    font-size: 32px;
 }
 
 .case:hover {
-	background: rgb(220,220,255);
+    background: rgb(220,220,255);
 }
 
 .case:focus {
-	border-color: rgb(100, 100, 255);
+    border-color: rgb(100, 100, 255);
 }
 
 .case_noire {
-	background: black;
+    background: black;
 }
 
 .case_noire:hover {
-	background: rgb(10, 10, 100);
+    background: rgb(10, 10, 100);
 }
 
 .case_numero:hover {
-	background: white;
+    background: white;
 }
 
 .case_erreur {
-	animation-duration: 1.5s;
-	animation-iteration-count: infinite;
-	animation-name: erreur_blanche;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-name: erreur_blanche;
 }
 
 .case_erreur.case_noire {
-	animation-name: erreur_noire;
+    animation-name: erreur_noire;
 }
 
 @keyframes erreur_blanche {
-	0% {
-		background-color: white;
-	}
-	50% {
-		background-color: rgb(255, 100, 100);
-	}
-	100% {
-		background-color: white;
-	}
+    0% { background-color: rgb(255, 200, 200); }
+    50% { background-color: rgb(255, 100, 100); }
+    100% { background-color: rgb(255, 200, 200); }
 }
 
 @keyframes erreur_noire {
-	0% {
-		background-color: black;
-	}
-	50% {
-		background-color: rgb(255, 25, 25);
-	}
-	100% {
-		background-color: black;
-	}
+    0% { background-color: rgb(50, 0, 0); }
+    50% { background-color: rgb(100, 0, 0); }
+    100% { background-color: rgb(50, 0, 0); }
 }
 
-.case_aide {
-	background: rgb(255, 200, 100);
+.case_indice {
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-name: indice_blanche;
+}
+
+.case_indice.case_noire {
+    animation-name: indice_noire;
+}
+
+@keyframes indice_blanche {
+    0% { background-color: #fed193; }
+    50% { background-color: #f1e0ce; }
+    100% { background-color: #fed193; }
+}
+
+@keyframes indice_noire {
+    0% { background-color: #835f00; }
+    50% { background-color: #d79d00; }
+    100% { background-color: #835f00; }
 }
