@@ -1,6 +1,6 @@
 require_relative '../Grille/GrilleJouable.rb'
 
-module Historique
+module Sauvegarde
     ##
     # Un élément de l'historique
     #

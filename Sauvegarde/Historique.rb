@@ -1,6 +1,6 @@
 require_relative 'HistoriqueElement.rb'
 
-module Historique
+module Sauvegarde
 	##
 	# Un historique de partie
 	#
