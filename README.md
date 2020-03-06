@@ -21,6 +21,7 @@ Dans votre dossier de projet :
 1. `git fetch upstream`
 2. `git checkout master`
 3. `git merge upstream/master`
+4. `git push`
 
 ### Pour soumettre vos modifications
 
