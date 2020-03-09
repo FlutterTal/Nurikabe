@@ -10,6 +10,10 @@ module Gui
         # Ligne du sélecteur d'utilisateur représentant un utilisateur.
         class Ligne < Gtk::Box
             
+            ##
+            # Label où sont écrites les informations (Gtk::Label)
+            attr_reader :label
+            
             private_class_method :new
             
             ##
@@ -42,19 +46,17 @@ module Gui
                 @label = Gtk::Label.new
                 @label.margin_top = 4
                 @label.margin_bottom = 4
-                @label.marign_right = 4
+                @label.margin_right = 4
                 @label.show
-                self.pack_end(@label)
+                self.pack_start(@label)
                 self.show
             end
             
-            protected
-            
-            ##
-            # Label où sont écrites les informations (Gtk::Label)
-            attr_reader :label
-            
         end
+        
+        ##
+        # Gtk::ListBox contenant les Gtk::SelecteurUtilisateur::Ligne
+        attr_reader :liste
         
         private_class_method :new
         
@@ -65,7 +67,7 @@ module Gui
         # [+utilisateurs+]  Utilisateurs à ajouter (Array de Utilisateur)
         def SelecteurUtilisateur.creer(utilisateurs)
             selecteur = new
-            utilisateurs.each { |u| selecteur.liste.insert(Ligne.creer(u)) }
+            utilisateurs.each { |u| selecteur.liste.insert(Ligne.creer(u), -1) }
             return selecteur
         end
         
@@ -75,25 +77,24 @@ module Gui
         # Méthode privée, utiliser Gui::SelecteurUtilisateur.creer.
         def initialize
             super
+            self.default_width = 400
+            self.default_height = 300
             box = Gtk::Box.new(:vertical)
             scrolled_window = Gtk::ScrolledWindow.new
             @liste = Gtk::ListBox.new
             @liste.show
             scrolled_window.add_with_viewport(@liste)
+            scrolled_window.expand = true
+            scrolled_window.propagate_natural_height = true
             scrolled_window.show
             box.pack_start(scrolled_window)
-            bouton = Gtk::Button("Nouvel utilisateur")
+            bouton = Gtk::Button.new(label: "Nouvel utilisateur")
             bouton.show
             box.pack_end(bouton)
             box.show
             self.add(box)
+            self.show
         end
-        
-        protected
-        
-        ##
-        # Gtk::ListBox contenant les Gtk::SelecteurUtilisateur::Ligne
-        attr_reader :liste
         
     end
     
