@@ -1,5 +1,3 @@
-require_relative 'HistoriqueElement.rb'
-
 module Sauvegarde
 	##
 	# Un historique de partie
@@ -13,7 +11,7 @@ module Sauvegarde
 		#
 		# Paramètres :
 		# [+utilisateur+] Utilisateur
-		# [+grille+] GrilleStatique
+		# [+grille+] GrilleJouable
 		def Historique.Ouvrir(utilisateur, grille)
 			new(utilisateur, grille)
 		end
@@ -23,13 +21,16 @@ module Sauvegarde
 		#
 		# Paramètres :
 		# [+utilisateur+] Utilisateur
-		# [+grille+] GrilleStatique
+		# [+grille+] GrilleJouable
 		def initialize(utilisateur, grille)
-			@fichier = File.new("Hist_#{utilisateur.nom}_#{grille.solution.numero}", "r+")
-			if @fichier.empty? 
-				@historique = Array.new
-			else do
+			@grille = grille
+			nom = "Hist_#{utilisateur.nom}_#{grille.solution.numero}"
+			if File.exist?(nom)
+				@fichier = File.new(nom, "r+")
 				@historique = Marshal.load(@fichier)
+			else
+				@fichier = File.new(nom, "w+")
+				@historique = Array.new
 			end
 			@index = 0
 		end
@@ -46,10 +47,10 @@ module Sauvegarde
 		def sauvegarder(case_jeu, etat_avant, etat_apres)
 			unless fin?
 				@historique.slice!(@index+1..@historique.size)
+				@index = @historique.size
 			end
-			# peut-être besoin de parenthèses
-			suivant = HistoriqueElement.Creer(case_jeu, etat_avant, etat_apres)
-			#@fichier.truncate(0)
+			@historique[@index] = HistoriqueElement.Creer(@grille, case_jeu, etat_avant, etat_apres)
+			@index += 1
 			Marshal.dump(@historique, @fichier)
 			@fichier.fdatasync
 			return self
@@ -90,6 +91,15 @@ module Sauvegarde
 				yield suivant
 			end
 			return self
+		end
+
+		def to_s
+			res = "path: " + @fichier.path + "\nnb_coups: " + @historique.size.to_s + "\nCoups: "
+			@historique.each { |e|
+				res += "\n" + e.to_s
+			}
+			res += "\n"
+			return res
 		end
 	end
 end

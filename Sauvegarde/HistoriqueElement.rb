@@ -14,26 +14,32 @@ module Sauvegarde
         # Crée un élément de l'historique
         #
         # Paramètres :
+        # [+grille+] GrilleJouable
 		# [+case_jeu+] CaseJouable
 		# [+etat_avant+] CaseJouable::etatPossible 
 		# [+etat_apres+] CaseJouable::etatPossible
-        def HistoriqueElement.Creer(case_jeu, etat_avant, etat_apres)
-            new(case_jeu, etat_avant, etat_apres)
+        def HistoriqueElement.Creer(grille, case_jeu, etat_avant, etat_apres)
+            new(grille, case_jeu, etat_avant, etat_apres)
         end
 
         ##
         # Initialise l'élément et vérifie la validité du nouvel état
         #
         # Paramètres :
-		# [+case_jeu+] CaseJouable
+        # [+grille+] GrilleJouable
+        # [+case_jeu+] CaseJouable
 		# [+etat_avant+] CaseJouable::etatPossible 
 		# [+etat_apres+] CaseJouable::etatPossible
-        def initialize(case_jeu, etat_avant, etat_apres)
+        def initialize(grille, case_jeu, etat_avant, etat_apres)
             @case_jeu = case_jeu
             @etat_avant = etat_avant
             @etat_apres = etat_apres
-            @erreur = GrilleJouable.verifCase(case_jeu)
+            @erreur = !grille.verifCase(case_jeu)
         end
 
+
+        def to_s
+            return "\tcase: " + @case_jeu.to_s + "\tetat_avant: " + @etat_avant + "\tetat_apres: " + @etat_apres + "\terreur: " + @erreur.to_s
+        end
     end
 end
