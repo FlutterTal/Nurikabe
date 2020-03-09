@@ -7,13 +7,13 @@ require_relative '../Grille/GrilleJouable.rb'
 module Gui
     
     ##
-    # Application de test pour Gui::GGrille.
+    # Démonstration pour Gui::GGrille.
     #
     # Représente une fenêtre contenant une Gui::GGrille.
 	#
-	# Pour lancer le script : <tt>./GUI/GrilleTest.rb</tt> depuis la racine
+	# Pour lancer le script : <tt>./GUI/DemoGrille.rb</tt> depuis la racine
 	# du dépôt.
-    class GrilleTest < Gtk::Window
+    class DemoGrille < Gtk::Window
         
         private_class_method :new
         
@@ -23,7 +23,7 @@ module Gui
         #
         # Paramètres :
         # [+grille+]  Grille
-        def GrilleTest.creer(grille)
+        def DemoGrille.creer(grille)
             f = new
             
             f.set_title("Nurikabe")
@@ -48,5 +48,5 @@ Gtk.init if Gtk.respond_to?(:init)
 	screen = Gdk::Display.default.default_screen
 	Gtk::StyleContext.add_provider_for_screen(screen, provider, 20000)
 	provider.load(path: "GUI/grille.css")
-    fenetre = Gui::GrilleTest.creer(GrilleJouable.creer(1))
+    fenetre = Gui::DemoGrille.creer(GrilleJouable.creer(1))
 Gtk.main
