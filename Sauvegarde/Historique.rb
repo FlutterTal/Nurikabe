@@ -29,7 +29,7 @@ module Sauvegarde
 				@fichier = File.new(nom, "r+")
 				@historique = Marshal.load(@fichier)
 			else
-				@fichier = File.new(nom, "w+")
+				@fichier = File.new(nom, "w")
 				@historique = Array.new
 			end
 			@index = 0
@@ -46,13 +46,12 @@ module Sauvegarde
 		# [+etat_apres+] CaseJouable::etatPossible
 		def sauvegarder(case_jeu, etat_avant, etat_apres)
 			unless fin?
-				@historique.slice!(@index+1..@historique.size)
+				@historique.slice!(@index..@historique.size)
 				@index = @historique.size
 			end
 			@historique[@index] = HistoriqueElement.Creer(@grille, case_jeu, etat_avant, etat_apres)
 			@index += 1
-			Marshal.dump(@historique, @fichier)
-			@fichier.fdatasync
+			@fichier.pwrite(Marshal.dump(@historique),0)
 			return self
 		end
 
@@ -87,6 +86,7 @@ module Sauvegarde
 		#
 		# Donne en paramètre de bloc des HistoriqueElement
 		def replay
+			@index -= 1
 			until fin?
 				yield suivant
 			end
