@@ -2,7 +2,12 @@ require 'gtk3'
 
 module Gui
 
+    ##
+    # Widget graphique représentant l'écran d'accueil.
     class Accueil < Gtk::Window
+        
+        ##
+        # Méthode permettant de créer l'écran d'accueil.
         def Accueil.creer
             fenetre = new
             fenetre.set_title("Nurikabe")
