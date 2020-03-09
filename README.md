@@ -42,3 +42,4 @@ projet) :
 ## Les programmes exécutables
 
 * Une grille de jeu interactive : `./GUI/GrilleTest.rb`
+* Un sélecteur d'utilisateurs (fictifs) : `./GUI/DemoSelecteurUtilisateur.rb`
