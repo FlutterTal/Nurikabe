@@ -1,67 +1,51 @@
 class Utilisateur
   private_class_method :new
-  attr_reader :nom ,:credit
+  attr_reader :nom 
+  attr_accessor :credit, :utilisateur
  
-  def Utilisateur.creer()
-    new()
+  def Utilisateur.Creer(nom)
+    new(nom)
   end
 
-  def initialize()
-    loop{
-    puts("Saisir votre nom")
-    @nom = gets
-    @credit = 0
-    break if(!verifNom(@nom))
-    puts("Nom déjà pris")
-    }
-    fichierUtilisateur = File.open(@nom,'w')
-    fichierUtilisateur.puts("#{@nom}#{@credit}")
-    fichierUtilisateur.close
+  def initialize(nom)
+    Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+    fichier = File.open("#{nom}",'a+')
+    @utilisateur = Array.new
+
+    if !File.zero?(fichier)
+      @utilisateur = Marshal.load(fichier)
+      @nom = @utilisateur[0]
+      @credit = @utilisateur[1]
+    else
+      @utilisateur[0] = nom
+      @utilisateur[1] = 0
+      Marshal.dump(utilisateur, fichier)
+    end
+    fichier.close
   end
 
-  def verifNom(nom)
+  def self.verifNom(nom)
     return File.exist?(nom)
   end
 
-  def supprimerUtilisateur()
-    File.delete(@nom)
+  def self.supprimerUtilisateur(nom)
+    File.delete(nom)
   end
 
-  def modifCredit(nom,montant)
-    donnees = ''
-    fichierUtilisateur = File.open(nom, 'r')
-    fichierUtilisateur.each {|ligne|
-    if fichierUtilisateur.lineno == 2
-        ligne = ligne + montant.to_s
-    end
- 
-    donnees += ligne
-    }
- 
-    fichierUtilisateur.close
- 
-    fichierUtilisateur = File.open(nom, 'w+')
-    fichierUtilisateur.write(donnees)
-    fichierUtilisateur.close
+  def self.comptesUtilisateurs()
+    Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+    print Dir.glob("*[^.rb]").sort
   end
 
-  #Permet de charger le nom d'un utilisateur ayant déjà été créé
-  def charger(nom)
-    tabUser = File.open('BDD_User.txt', 'r').readlines
-    fichierUtilisateur = File.open("BDD_User.txt", "r")
-    i = 0
-    if (tabUser.size==0)
-      return -1
-    else
-      while (i<= tabUser.size)
-        if(nom==tabUser[i])
-          return 1
-        end
-        i = i+2
-      end
-    end
-    fichierUtilisateur.close
-    return 0
+  def changerCredit(montant)
+    Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+    fichier = File.open("#{self.nom}",'a+')
+
+    @utilisateur[0] = self.nom
+    @utilisateur[1] = self.credit += montant
+
+    Marshal.dump(utilisateur, fichier)
+    fichier.close
   end
 
 # WAIT CLASSEMENT
@@ -74,10 +58,6 @@ class Utilisateur
       end
     end
     return @tempsMoyen/@niveauTermine
-  end
-
-  def nombreGrilles()
-
   end
 
   def to_s()
