@@ -1,10 +1,19 @@
-
+##
+# Techniques d'aides basiques
+#
 # On suppose que les "StartingTechniques" ont été appliquées
 
 class BasicTechniques
 
-# Surrounded square
-# Since these squares are surrounded by walls horizontally and vertically they cannot belong to an island and must therefore be shaded to be part of a wall
+  ##
+  # Techique de la case vide entourée
+  #
+  # Surrounded square
+  # Since these squares are surrounded by walls horizontally and vertically they cannot belong to an island and must therefore be shaded to be part of a wall
+  #
+  # Paramètres :
+  # [+grille+] Case courante sur laquelle est associé une aide
+	# [+tab+] Tableau contenant les aides (pour la grille du joueur courant)
   def BasicTechniques.caseVideEntoure(grille, tab)
     taille_colonne = grille.solution().taille_colonne()
     taille_ligne = grille.solution().taille_ligne()
@@ -81,8 +90,16 @@ class BasicTechniques
 
   end
 
-# Avoiding wall area of 2x2
-# According to the rules it is not allowed to have wall areas of 2x2 or larger.
+
+  ##
+  # Technique pour le calcul de la largeur du mur
+  #
+  # Avoiding wall area of 2x2
+  # According to the rules it is not allowed to have wall areas of 2x2 or larger.
+  #
+  # Paramètres :
+  # [+grille+] Case courante sur laquelle est associé une aide
+	# [+tab+] Tableau contenant les aides (pour la grille du joueur courant)
   def BasicTechniques.largeurMur(grille, tab)
     taille_colonne = grille.solution().taille_colonne()
     taille_ligne = grille.solution().taille_ligne()
