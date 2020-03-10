@@ -4,7 +4,7 @@ require_relative 'CaseJouable.rb'
 require_relative 'Grille'
 
 class GrilleStatique < Grille
-    attr_reader :taille_ligne, :taille_colonne, :numero, :grilleS
+    attr_reader :taille_ligne, :taille_colonne, :numero, :grilleS, :mode
     private_class_method :new
 
     def GrilleStatique.creer(unNumero)
@@ -16,6 +16,7 @@ class GrilleStatique < Grille
         ligneGrille = Array.new
 
         @numero = unNumero
+
         fichierGrille = File.new("Grilles.txt", "r")
         ligneFichier = fichierGrille.readlines[@numero-1]
         fichierGrille.close
@@ -39,6 +40,7 @@ class GrilleStatique < Grille
         }
     end
 
+    # Retourne la case de la ligne l et de la colonne c
     def case_plateau(l,c)
         return self.grilleS.grille[l][c]
     end

@@ -1,7 +1,7 @@
 class Utilisateur
   private_class_method :new
-  attr_reader :nom 
-  attr_accessor :credit, :utilisateur
+  attr_reader :nom
+  attr_accessor :credit, :aventure, :grilleArcade
  
   def Utilisateur.Creer(nom)
     new(nom)
@@ -10,17 +10,23 @@ class Utilisateur
   def initialize(nom)
     Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
     fichier = File.open("#{nom}",'a+')
-    @utilisateur = Array.new
+    utilisateur = Array.new
+    @grilleArcade = Array.new()
 
     if !File.zero?(fichier)
-      @utilisateur = Marshal.load(fichier)
-      @nom = @utilisateur[0]
-      @credit = @utilisateur[1]
+      utilisateur = Marshal.load(fichier)
+      @nom = utilisateur[0]
+      @credit = utilisateur[1]
+      @aventure = utilisateur[3]
+      @grilleArcade.push(utilisateur[4])
     else
-      @utilisateur[0] = nom
-      @utilisateur[1] = 0
+      utilisateur[0] = nom
+      utilisateur[1] = 0
+      @grilleAventure = nil
+      
       Marshal.dump(utilisateur, fichier)
     end
+
     fichier.close
   end
 
@@ -37,12 +43,13 @@ class Utilisateur
     print Dir.glob("*[^.rb]").sort
   end
 
-  def changerCredit(montant)
+  def self.sauvegarde(user)
     Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
-    fichier = File.open("#{self.nom}",'a+')
+    fichier = File.open("#{user.nom}",'w')
+    utilisateur = Array.new
 
-    @utilisateur[0] = self.nom
-    @utilisateur[1] = self.credit += montant
+    utilisateur[0] = user.nom
+    utilisateur[1] = user.credit
 
     Marshal.dump(utilisateur, fichier)
     fichier.close

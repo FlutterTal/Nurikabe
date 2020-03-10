@@ -2,9 +2,7 @@ require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
 
 require_relative '../Utilisateur/Utilisateur.rb'
-=begin
 require_relative '../Historique/Historique.rb'
-=end
 
 class GrilleJouable < Grille
     attr_reader :erreur, :locErreur, :grille, :solution
@@ -33,8 +31,10 @@ class GrilleJouable < Grille
 
         @erreur = 0
         @locErreur = Array.new()
+        
     end
 
+    # Donne le nombre d'erreur dans une grille et leurs position
     def verifErreur()
         self.grille.grille.each{ |ligne|
             ligne.each{ |cases|
@@ -46,6 +46,7 @@ class GrilleJouable < Grille
         }
     end
 
+    # Vérifie si une case est correct ou non par rapport à la solution
     def verifCase(uneCase)
         if uneCase.class == CaseJouable && uneCase.etatCase != self.solution.grilleS.grille[uneCase.ligne][uneCase.colonne].etatCase
             return false
@@ -54,6 +55,7 @@ class GrilleJouable < Grille
         end
     end
 
+    # réinitialise la grille avec que des cases blanches
     def reinitialiserGrille()
         @grille.grille.each { |ligne|
             ligne.each{ |cases|
@@ -64,22 +66,46 @@ class GrilleJouable < Grille
         }
     end
 
-=begin
-A TESTER
+    # Charge une grille d'un utilisateur à l'aide de l'historique
+    # ATTENTION : NON TESTE
     def chargerGrille(unUtilisateur)
-        Historique.Ouvrir(unUtilisateur, self.grille).replay{ |c| self.grille.grille.case[c.ligne][[c.colonne].etatCase = c.etat_apres}       
+        Historique.Ouvrir(unUtilisateur, self.grille).replay{ |c| 
+            self.grille.grille.case[c.ligne][c.colonne].etatCase = c.etat_apres}
     end
-=end
 
-    def grilleTerminee
+    # Vérifie si une grille est terminée ou non
+    def grilleTerminee?
         return self.erreur == 0
     end
-=begin
+
+    # Ajoute les crédits de la grille terminée à l'utilisateur
     def donnePoint(unUtilisateur)
-        unUtilisateur.credit += 5
+        unUtilisateur.modifCredit(5)
         return self
     end
-=end
+
+    # Va ajouter les grilles terminé en fonction du mode dans le fichier de l'utilisateur
+    def grilleTerminee(unUtilisateur)
+        #if self.grilleTerminee?
+        #    if self.solution.mode == "Arcade"
+                unUtilisateur.grilleArcade.push(self.solution.numero)
+
+                fichier = File.open("Grille_#{self.solution.numero}", 'a+')
+
+                if !File.zero?(fichier)
+                    classement = Marshal.load(fichier)
+                else
+                    classement = Array.new
+                end
+
+                classement.push(Array.new("Boujour", "5"))
+                Marshal.dump(classement, fichier)
+                fichier.close
+            #else   
+                #unUtilisateur.aventure = self.solution.numero
+        #end
+    end
+
     def to_s()
         str = ""
         @grille.grille.each { |ligne|
