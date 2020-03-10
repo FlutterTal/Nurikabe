@@ -1,5 +1,5 @@
 require_relative 'Case.rb'
-require_relative '../Historique/Historique.rb' 
+require_relative '../Sauvegarde/Historique.rb' 
 
 class CaseJouable < Case
     attr_accessor :etatCase
