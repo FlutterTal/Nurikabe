@@ -60,6 +60,43 @@ module Gui
         end
         
         ##
+        # Boîte de dialogue permettant de créer un nouvel utilisateur.
+        class NouvelUtilisateurDialogue < Gtk::Dialog
+            
+            ##
+            # Crée une nouvelle boîte de dialogue permettant de créer un
+            # utilisateur.
+            #
+            # Paramètres :
+            # [+parent+]    Fenêtre parente à la boîte de dialogue
+            def initialize(parent)
+                super(parent: parent)
+                box_principale = Gtk::Box.new(:horizontal)
+                box_principale.expand = true
+                icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
+                icone.pixel_size = 64
+                icone.margin_left = 4
+                icone.margin_right = 4
+                icone.margin_top = 4
+                icone.margin_bottom = 4
+                icone.show
+                box_principale.pack_start(icone)
+                box_secondaire = Gtk::Box.new(:verticale)
+                box_secondaire.expand
+                label = Gtk::Label("Nom d'utilisateur :")
+                label.xalign = 0
+                label.show
+                box_secondaire.pack_start(label)
+                champs = Gtk::Entry.new
+                champs.show
+                box_secondaire.pack_start(champs)
+                box_secondaire.show
+                self.show
+            end
+            
+        end
+        
+        ##
         # Gtk::ListBox contenant les Gtk::SelecteurUtilisateur::Ligne
         attr_reader :liste
         
@@ -97,9 +134,12 @@ module Gui
             scrolled_window.expand = true
             scrolled_window.show
             box.pack_start(scrolled_window, {fill: true})
-            bouton = Gtk::Button.new(label: "Nouvel utilisateur")
-            bouton.show
-            box.pack_end(bouton)
+            nouvel_utilisateur = Gtk::Button.new(label: "Nouvel utilisateur")
+            nouvel_utilisateur.signal_connect("clicked") { |bouton|
+                NouvelUtilisateurDialogue.new(this)
+            }
+            nouvel_utilisateur.show
+            box.pack_end(nouvel_utilisateur)
             box.expand = true
             box.show
             self.content_area.add(box)
