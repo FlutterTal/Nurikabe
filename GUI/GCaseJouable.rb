@@ -17,7 +17,7 @@ module Gui
             gc.case = c
             gc.maj_etat
 
-            gc.signal_connect("clicked") do |gc|
+            gc.signal_connect("clicked") { |gc|
                 case gc.case.etatCase
                 when :BLANC then gc.case.etatCase = :NOIR
                 when :NOIR then gc.case.etatCase = :MARK
@@ -26,7 +26,7 @@ module Gui
                         "#{gc.case.colonne}) inconnu : #{gc.case}"
                 end
                 gc.maj_etat
-            end
+            }
                 
             return gc
         end
