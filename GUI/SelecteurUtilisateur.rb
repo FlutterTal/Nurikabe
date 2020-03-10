@@ -4,7 +4,7 @@ module Gui
     
     ##
     # Fenêtre permettant de choisir un utilisateur ou d'en créer un.
-    class SelecteurUtilisateur < Gtk::Window
+    class SelecteurUtilisateur < Gtk::Dialog
         
         ##
         # Ligne du sélecteur d'utilisateur représentant un utilisateur.
@@ -82,8 +82,9 @@ module Gui
         # Méthode privée, utiliser Gui::SelecteurUtilisateur.creer.
         def initialize
             super
-            self.default_width = 400
-            self.default_height = 300
+            self.title = "Sélectionnez un utilisateur"
+            self.default_width = 600
+            self.default_height = 400
             box = Gtk::Box.new(:vertical)
             scrolled_window = Gtk::ScrolledWindow.new
             @liste = Gtk::ListBox.new
@@ -99,9 +100,9 @@ module Gui
             box.pack_start(scrolled_window)
             bouton = Gtk::Button.new(label: "Nouvel utilisateur")
             bouton.show
-            box.pack_end(bouton)
+            box.pack_start(bouton)
             box.show
-            self.add(box)
+            self.content_area.add(box)
             self.show
         end
         
