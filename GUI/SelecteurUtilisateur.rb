@@ -95,12 +95,12 @@ module Gui
             @liste.show
             scrolled_window.add_with_viewport(@liste)
             scrolled_window.expand = true
-            scrolled_window.propagate_natural_height = true
             scrolled_window.show
-            box.pack_start(scrolled_window)
+            box.pack_start(scrolled_window, {fill: true})
             bouton = Gtk::Button.new(label: "Nouvel utilisateur")
             bouton.show
-            box.pack_start(bouton)
+            box.pack_end(bouton)
+            box.expand = true
             box.show
             self.content_area.add(box)
             self.show
