@@ -43,3 +43,4 @@ projet) :
 
 * Une grille de jeu interactive : `./GUI/DemoGrille.rb`
 * Un sélecteur d'utilisateurs (fictifs) : `./GUI/DemoSelecteurUtilisateur.rb`
+* Un écran d'accueil : `./GUI/DemoAccueil.rb`
