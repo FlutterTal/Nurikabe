@@ -62,6 +62,14 @@ module Gui
         ##
         # Boîte de dialogue permettant de créer un nouvel utilisateur.
         class NouvelUtilisateurDialogue < Gtk::Dialog
+        
+            ##
+            # Identifiant de l'action _Annuler_ (Integer)
+            ANNULER = 0
+            
+            ##
+            # Identifiant de l'action _Créer un utilisateur_ (Integer)
+            CREER = 1
             
             ##
             # Crée une nouvelle boîte de dialogue permettant de créer un
@@ -81,9 +89,9 @@ module Gui
                 icone.margin_bottom = 4
                 icone.show
                 box_principale.pack_start(icone)
-                box_secondaire = Gtk::Box.new(:verticale)
-                box_secondaire.expand
-                label = Gtk::Label("Nom d'utilisateur :")
+                box_secondaire = Gtk::Box.new(:vertical)
+                box_secondaire.expand = true
+                label = Gtk::Label.new("Nom d'utilisateur :")
                 label.xalign = 0
                 label.show
                 box_secondaire.pack_start(label)
@@ -91,6 +99,17 @@ module Gui
                 champs.show
                 box_secondaire.pack_start(champs)
                 box_secondaire.show
+                box_principale.add(box_secondaire)
+                box_principale.show
+                self.content_area.add(box_principale)
+                self.add_button("Annuler", ANNULER)
+                self.add_button("Créer un utilisateur", CREER)
+                self.signal_connect("response") { |dialogue, action|
+                    case action
+                    when ANNULER then
+                        dialogue.close
+                    end
+                }
                 self.show
             end
             
@@ -106,9 +125,10 @@ module Gui
         # Crée un sélecteur d'utilisateurs.
         #
         # Paramètres :
+        # [+parent+]        Fenêtre parente au sélecteur d'utilisateur
         # [+utilisateurs+]  Utilisateurs à ajouter (Array de Utilisateur)
-        def SelecteurUtilisateur.creer(utilisateurs)
-            selecteur = new
+        def SelecteurUtilisateur.creer(parent, utilisateurs)
+            selecteur = new(parent)
             utilisateurs.each { |u| selecteur.liste.insert(Ligne.creer(u), -1) }
             return selecteur
         end
@@ -117,8 +137,11 @@ module Gui
         # Crée la fenêtre du sélecteur d'utilisateur.
         #
         # Méthode privée, utiliser Gui::SelecteurUtilisateur.creer.
-        def initialize
-            super
+        #
+        # Paramètres :
+        # [+parent+]    Fenêtre parente au sélecteur d'utilisateur
+        def initialize(parent)
+            super(parent: parent)
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
             self.default_height = 400
@@ -128,6 +151,7 @@ module Gui
             @liste.selection_mode = :single
             @liste.signal_connect("row-activated") { |liste, ligne|
                 puts "Utilisateur #{ligne.children[0].utilisateur} sélectionné"
+                self.close
             }
             @liste.show
             scrolled_window.add_with_viewport(@liste)
@@ -136,13 +160,14 @@ module Gui
             box.pack_start(scrolled_window, {fill: true})
             nouvel_utilisateur = Gtk::Button.new(label: "Nouvel utilisateur")
             nouvel_utilisateur.signal_connect("clicked") { |bouton|
-                NouvelUtilisateurDialogue.new(this)
+                NouvelUtilisateurDialogue.new(self)
             }
             nouvel_utilisateur.show
             box.pack_end(nouvel_utilisateur)
             box.expand = true
             box.show
             self.content_area.add(box)
+            self.signal_connect("destroy") { Gtk.main_quit }
             self.show
         end
         
