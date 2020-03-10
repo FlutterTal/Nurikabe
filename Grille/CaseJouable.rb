@@ -1,8 +1,5 @@
 require_relative 'Case.rb'
-
-=begin
 require_relative '../Historique/Historique.rb' 
-=end
 
 class CaseJouable < Case
     attr_accessor :etatCase
@@ -23,11 +20,13 @@ class CaseJouable < Case
         return @@etatPossible[self.etatCase]
     end
 
+    # Restaure la case en état BLANC
     def restorCase()
         self.etatCase = @@etatPossible.key('B')
     end
 
-    '''
+    # Change l'état d'une case présente dans l'historique des coups
+
     def changementEtat(unEtat, historique)
         etatAvant = self.etatCase
         historique.sauvegarder(self, etatAvant, unEtat)
@@ -35,5 +34,5 @@ class CaseJouable < Case
 
         return self
     end
-    '''
+
 end
