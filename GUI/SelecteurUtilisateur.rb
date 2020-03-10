@@ -14,6 +14,10 @@ module Gui
             # Label où sont écrites les informations (Gtk::Label)
             attr_reader :label
             
+            ##
+            # Utilisateur concerné
+            attr_accessor :utilisateur
+            
             private_class_method :new
             
             ##
@@ -26,6 +30,7 @@ module Gui
                 ligne.label.markup = "<b>#{utilisateur.nom}</b>\n" + 
                         "<span weight=\"light\" style=\"italic\"> Crédit : " +
                         "#{utilisateur.credit}</span>"
+                ligne.utilisateur = utilisateur
                 return ligne
             end
             
@@ -82,6 +87,10 @@ module Gui
             box = Gtk::Box.new(:vertical)
             scrolled_window = Gtk::ScrolledWindow.new
             @liste = Gtk::ListBox.new
+            @liste.selection_mode = :single
+            @liste.signal_connect("row-activated") { |liste, ligne|
+                puts "Utilisateur #{ligne.children[0].utilisateur} sélectionné"
+            }
             @liste.show
             scrolled_window.add_with_viewport(@liste)
             scrolled_window.expand = true

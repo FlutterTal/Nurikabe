@@ -25,6 +25,8 @@ class DemoUtilisateur
         @nom, @credit = nom, credit
     end
     
+    alias :to_s :nom
+    
 end
 
 Gtk.init if Gtk.respond_to? :init
