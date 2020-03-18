@@ -1,7 +1,7 @@
 class Utilisateur
   private_class_method :new
-  attr_reader :nom
-  attr_accessor :credit, :aventure, :grilleArcade
+  attr_reader :nom, :grilleAventure, :grilleArcade
+  attr_accessor :credit
  
   def Utilisateur.Creer(nom)
     new(nom)
@@ -10,22 +10,11 @@ class Utilisateur
   def initialize(nom)
     Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
     fichier = File.open("#{nom}",'a+')
-    utilisateur = Array.new
-    @grilleArcade = Array.new()
 
-    if !File.zero?(fichier)
-      utilisateur = Marshal.load(fichier)
-      @nom = utilisateur[0]
-      @credit = utilisateur[1]
-      @aventure = utilisateur[3]
-      @grilleArcade.push(utilisateur[4])
-    else
-      utilisateur[0] = nom
-      utilisateur[1] = 0
-      @grilleAventure = nil
-      
-      Marshal.dump(utilisateur, fichier)
-    end
+    @nom = nom
+    @credit = 0
+    @aventure = nil
+    @grilleArcade = Array.new()
 
     fichier.close
   end
@@ -43,16 +32,19 @@ class Utilisateur
     print Dir.glob("*[^.rb]").sort
   end
 
-  def self.sauvegarde(user)
+  def sauvegarde
     Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
-    fichier = File.open("#{user.nom}",'w')
-    utilisateur = Array.new
+    fichier = File.open("#{self.nom}",'w')
 
-    utilisateur[0] = user.nom
-    utilisateur[1] = user.credit
-
-    Marshal.dump(utilisateur, fichier)
+    Marshal.dump(self, fichier)
     fichier.close
+  end
+
+  def self.chargerUtilisateur(unUtilisateur)
+    Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+    fichier = File.open("#{unUtilisateur.nom}", 'r')
+
+    return Marshal.load(fichier)
   end
 
 # WAIT CLASSEMENT
