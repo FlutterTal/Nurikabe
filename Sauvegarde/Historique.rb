@@ -42,7 +42,7 @@ module Sauvegarde
 		#
 		# Paramètres :
 		# [+case_jeu+] CaseJouable
-		# [+etat_avant+] CaseJouable::etatPossible 
+		# [+etat_avant+] CaseJouable::etatPossible
 		# [+etat_apres+] CaseJouable::etatPossible
 		def sauvegarder(case_jeu, etat_avant, etat_apres)
 			unless fin?
@@ -57,7 +57,7 @@ module Sauvegarde
 
 		##
 		# Renvoie l'élément précédant l'élément courant
-		# 
+		#
 		# Bloc optionel
 		def precedent
 			@index -= 1
@@ -67,7 +67,7 @@ module Sauvegarde
 
 		##
 		# Renvoie l'élément suivant l'élément courant
-		# 
+		#
 		# Bloc optionel
 		def suivant
 			@index += 1
@@ -82,12 +82,12 @@ module Sauvegarde
 		end
 
 		##
-		# Execute le bloc de l'élément actuel à la fin
+		# Execute le bloc du premier au dernier coup
 		#
 		# Donne en paramètre de bloc des HistoriqueElement
 		def replay
-			@index -= 1
-			until fin?
+			i -= 1
+			until i == @index
 				yield suivant
 			end
 			return self
