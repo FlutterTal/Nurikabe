@@ -18,7 +18,7 @@ module Sauvegarde
 		# [+case_jeu+] CaseJouable
 		# [+etat_avant+] CaseJouable::etatPossible 
 		# [+etat_apres+] CaseJouable::etatPossible
-        def HistoriqueElement.Creer(grille, case_jeu, etat_avant, etat_apres)
+        def HistoriqueElement.creer(grille, case_jeu, etat_avant, etat_apres)
             new(grille, case_jeu, etat_avant, etat_apres)
         end
 

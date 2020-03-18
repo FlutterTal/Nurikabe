@@ -12,7 +12,7 @@ module Sauvegarde
 		# Paramètres :
 		# [+utilisateur+] Utilisateur
 		# [+grille+] GrilleJouable
-		def Historique.Ouvrir(utilisateur, grille)
+		def Historique.ouvrir(utilisateur, grille)
 			new(utilisateur, grille)
 		end
 
