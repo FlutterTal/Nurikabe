@@ -15,9 +15,9 @@ module Sauvegarde
         #
         # Paramètres :
         # [+grille+] GrilleJouable
-		# [+case_jeu+] CaseJouable
-		# [+etat_avant+] CaseJouable::etatPossible 
-		# [+etat_apres+] CaseJouable::etatPossible
+        # [+case_jeu+] CaseJouable
+        # [+etat_avant+] CaseJouable::etatPossible
+        # [+etat_apres+] CaseJouable::etatPossible
         def HistoriqueElement.creer(grille, case_jeu, etat_avant, etat_apres)
             new(grille, case_jeu, etat_avant, etat_apres)
         end
@@ -28,8 +28,8 @@ module Sauvegarde
         # Paramètres :
         # [+grille+] GrilleJouable
         # [+case_jeu+] CaseJouable
-		# [+etat_avant+] CaseJouable::etatPossible 
-		# [+etat_apres+] CaseJouable::etatPossible
+        # [+etat_avant+] CaseJouable::etatPossible
+        # [+etat_apres+] CaseJouable::etatPossible
         def initialize(grille, case_jeu, etat_avant, etat_apres)
             @case_jeu = case_jeu
             @etat_avant = etat_avant
