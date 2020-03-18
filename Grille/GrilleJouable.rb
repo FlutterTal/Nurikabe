@@ -5,7 +5,7 @@ require_relative '../Utilisateur/Utilisateur.rb'
 require_relative '../Historique/Historique.rb'
 
 class GrilleJouable < Grille
-    attr_reader :erreur, :locErreur, :grille, :solution
+    attr_reader :erreur, :locErreur, :grille, :solution, :classement
     private_class_method :new
 
     def GrilleJouable.creer(unNumero)
@@ -31,6 +31,7 @@ class GrilleJouable < Grille
 
         @erreur = 0
         @locErreur = Array.new()
+        @classement = Classement.Creer(@solution)
         
     end
 
@@ -86,24 +87,14 @@ class GrilleJouable < Grille
 
     # Va ajouter les grilles terminé en fonction du mode dans le fichier de l'utilisateur
     def grilleTerminee(unUtilisateur)
-        #if self.grilleTerminee?
-        #    if self.solution.mode == "Arcade"
+        if self.grilleTerminee?
+            if self.solution.mode == "Arcade"
                 unUtilisateur.grilleArcade.push(self.solution.numero)
-
-                fichier = File.open("Grille_#{self.solution.numero}", 'a+')
-
-                if !File.zero?(fichier)
-                    classement = Marshal.load(fichier)
-                else
-                    classement = Array.new
-                end
-
-                classement.push(Array.new("Boujour", "5"))
-                Marshal.dump(classement, fichier)
-                fichier.close
-            #else   
-                #unUtilisateur.aventure = self.solution.numero
-        #end
+                self.classement.ajouterUtilisateur(unUtilisateur, unChrono)
+            else   
+                unUtilisateur.aventure = self.solution.numero
+            end
+        end
     end
 
     def to_s()
