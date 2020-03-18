@@ -11,7 +11,7 @@ module Gui
         def Accueil.creer
             fenetre = new
             fenetre.set_title("Nurikabe")
-            box = Gtk::Box.new(:vertical)
+            box = Gtk::Box.new(:vertical, 10)
             fenetre.add(box)
             box.show
 
