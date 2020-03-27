@@ -2,7 +2,7 @@
 
 require 'gtk3'
 require_relative 'Grille/GrilleJouable.rb'
-require_relative 'GUI/GGrille.rb'
+require_relative 'GUI/Fenetre.rb'
 
 ##
 # Application
@@ -19,16 +19,12 @@ class Nurikabe < Gtk::Application
             provider,
             20000)
         self.signal_connect("activate") {
-            fenetre = Gtk::Window.new
-            fenetre.set_title("Nurikabe")
-            fenetre.signal_connect("destroy") { Gtk.main_quit }
-            fenetre.set_window_position(Gtk::WindowPosition::CENTER)
-            fenetre.add(Gui::GGrille.creer(GrilleJouable.creer(1)))
-            fenetre.show
+            fenetre = Gui::Fenetre.new
+            fenetre.signal_connect("destroy") { self.quit }
+            self.add_window(fenetre)
         }
     end
     
 end
 
 Nurikabe.new.run
-Gtk.main
