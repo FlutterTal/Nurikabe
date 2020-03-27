@@ -21,6 +21,7 @@ Dans votre dossier de projet :
 1. `git fetch upstream`
 2. `git checkout master`
 3. `git merge upstream/master`
+4. `git push`
 
 ### Pour soumettre vos modifications
 
@@ -37,3 +38,10 @@ projet) :
 
 * [Fork a repo - GitHub Help](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
 * [Syncing a fork - GitHub Help](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/syncing-a-fork)
+
+## Les programmes exécutables
+
+* Application : `./Nurikabe.rb`
+* Une grille de jeu interactive : `./GUI/DemoGrille.rb`
+* Un sélecteur d'utilisateurs (fictifs) : `./GUI/DemoSelecteurUtilisateur.rb`
+* Un écran d'accueil : `./GUI/DemoAccueil.rb`

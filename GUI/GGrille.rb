@@ -9,7 +9,7 @@ module Gui
     ##
     # Widget graphique représentant une GrilleJouable.
     class GGrille < Gtk::Grid
-      
+    
         private_class_method :new
         
         ##
@@ -19,6 +19,7 @@ module Gui
         # [+grille+]  Grille
         def GGrille.creer(grille)
             g = new
+            g.style_context.add_class("grille")
             grille.grille.grille.each do |ligne|
                 ligne.each do |c|
                     gc = nil
@@ -37,7 +38,9 @@ module Gui
         end
         
         ##
-        # Initialise une grille.
+        # Initialise la grille.
+        #
+        # Méthode privée, utiliser Gui::GGrille.creer pour créer une grille.
         def initialize
             super
             self.show

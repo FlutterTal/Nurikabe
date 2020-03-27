@@ -3,7 +3,8 @@ require_relative 'Grille/GrilleStatique.rb'
 require_relative 'Aide/Aide.rb'
 
 class Test
-  grille = GrilleJouable.creer(1, "test.txt")
+  grille = GrilleJouable.creer(1)
   print grille
-  #Aide.detecter(grille)
+  tab = []
+  Aide.detecter(grille, tab)
 end

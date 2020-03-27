@@ -1,26 +1,53 @@
 require_relative 'StartingTechniques.rb'
 require_relative 'BasicTechniques.rb'
-require_relative 'AdvancedTechniques.rb'
 
+##
+# Aide pour l'utilisateur
+#
+# Permet de gerer les differents niveaux d'aides
 class Aide
+  # Variables d'instances
+  # @caseC => Case en question
+  # @chaine => Description de l'aide
 
-    # Instancier si erreur detecter
-    def initialize(c, technique)
-      @case = c
-      @technique = technique # Chaine de caractete
-    end
+  attr_reader :caseC, :chaine
 
-    def update_credit()
+  ##
+  # Permet de créer un objet de type aide
+  #
+  # Paramètres :
+  # [+caseC+] Case courante sur laquelle est associé une aide
+	# [+chaine+] Chaine décrivant l'aide
+  def Aide.creer(caseC, chaine) 
+    new(caseC, chaine)
+  end
 
-    end
+  ##
+  # Permet d'initialiser un objet de type aide
+  #
+  # Paramètres :
+  # [+caseC+] Case courante sur laquelle est associé une aide
+	# [+chaine+] Chaine décrivant l'aide
+  def initialize(caseC, chaine)
+    @caseC, @chaine = caseC, chaine
+  end
 
-    # Méthode statique => Verification
-    def Aide.detecter(grille)
-      StartingTechniques.case1(grille)
-      StartingTechniques.caseVide(grille)
-      StartingTechniques.caseDiag(grille)
-      BasicTechniques.caseVideEntoure(grille)
-      BasicTechniques.largeurMur(grille)
-    end
+  ##
+  # Permet d'appliquer les aides sur la grille
+  #
+  # Paramètres :
+  # [+grille+] Case courante sur laquelle est associé une aide
+	# [+tab+] Tableau contenant les aides (pour la grille du joueur courant)
+  def Aide.detecter(grille, tab)
+    StartingTechniques.case1(grille, tab)
+    StartingTechniques.caseVide(grille, tab)
+    StartingTechniques.caseDiag(grille, tab)
+    BasicTechniques.caseVideEntoure(grille, tab)
+    BasicTechniques.largeurMur(grille, tab)
+  end
+
+  def to_s()
+    return @chaine
+  end
 
 end

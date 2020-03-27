@@ -2,8 +2,8 @@ require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
 
 require_relative '../Utilisateur/Utilisateur.rb'
-require_relative '../Historique/Historique.rb'
 require_relative '../Classement/Classement.rb'
+require_relative '../Sauvegarde/Historique.rb'
 
 module Grille
 
