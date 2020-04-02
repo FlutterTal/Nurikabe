@@ -9,36 +9,17 @@ module Gui
         ##
         # Ligne du sélecteur d'utilisateur représentant un utilisateur.
         class Ligne < Gtk::Box
-            
-            ##
-            # Label où sont écrites les informations (Gtk::Label)
-            attr_reader :label
-            
+        
             ##
             # Utilisateur concerné
-            attr_accessor :utilisateur
-            
-            private_class_method :new
-            
-            ##
-            # Crée une ligne pour l'utilisateur donné.
-            #
-            # Paramètres :
-            # [+utilisateur+]   Utilisateur
-            def Ligne.creer(utilisateur)
-                ligne = new
-                ligne.label.markup = "<b>#{utilisateur.nom}</b>\n" + 
-                        "<span weight=\"light\" style=\"italic\"> Crédit : " +
-                        "#{utilisateur.credit}</span>"
-                ligne.utilisateur = utilisateur
-                return ligne
-            end
+            attr_reader :utilisateur
             
             ##
             # Crée une ligne qui accueillera les données de l'utilisateur.
             #
-            # Méthode privée, utiliser Gui::SelecteurUtilisateur::Ligne.creer.
-            def initialize
+            # Paramètres :
+            # [+utilisateur+]   Utilisateur
+            def initialize(utilisateur)
                 super(:horizontal)
                 icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
                 icone.pixel_size = 48
@@ -52,7 +33,11 @@ module Gui
                 @label.margin_top = 4
                 @label.margin_bottom = 4
                 @label.margin_right = 4
+                @label.markup = "<b>#{utilisateur.nom}</b>\n" + 
+                        "<span weight=\"light\" style=\"italic\"> Crédit : " +
+                        "#{utilisateur.credit}</span>"
                 @label.show
+                @utilisateur = utilisateur
                 self.pack_start(@label)
                 self.show
             end
@@ -116,31 +101,13 @@ module Gui
         end
         
         ##
-        # Gtk::ListBox contenant les Gtk::SelecteurUtilisateur::Ligne
-        attr_reader :liste
-        
-        private_class_method :new
-        
-        ##
-        # Crée un sélecteur d'utilisateurs.
+        # Crée la fenêtre du sélecteur d'utilisateur.
         #
         # Paramètres :
         # [+parent+]        Fenêtre parente au sélecteur d'utilisateur
         # [+utilisateurs+]  Utilisateurs à ajouter (Array de Utilisateur)
-        def SelecteurUtilisateur.creer(parent, utilisateurs)
-            selecteur = new(parent)
-            utilisateurs.each { |u| selecteur.liste.insert(Ligne.creer(u), -1) }
-            return selecteur
-        end
-        
-        ##
-        # Crée la fenêtre du sélecteur d'utilisateur.
-        #
-        # Méthode privée, utiliser Gui::SelecteurUtilisateur.creer.
-        #
-        # Paramètres :
-        # [+parent+]    Fenêtre parente au sélecteur d'utilisateur
-        def initialize(parent)
+        # [+app+]           Application (Nurikabe)
+        def initialize(parent, utilisateurs, app = nil)
             super(parent: parent)
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
@@ -153,6 +120,7 @@ module Gui
                 puts "Utilisateur #{ligne.children[0].utilisateur} sélectionné"
                 self.close
             }
+            utilisateurs.each { |u| @liste.insert(Ligne.new(u), -1) }
             @liste.show
             scrolled_window.add_with_viewport(@liste)
             scrolled_window.expand = true
@@ -167,7 +135,13 @@ module Gui
             box.expand = true
             box.show
             self.content_area.add(box)
-            self.signal_connect("destroy") { Gtk.main_quit }
+            self.signal_connect("destroy") {
+                if(app.nil?) then
+                    Gtk.main_quit
+                else
+                    app.quit
+                end
+            }
             self.show
         end
         
