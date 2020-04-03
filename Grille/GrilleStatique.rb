@@ -24,19 +24,20 @@ module Grille
         attr_reader :taille_ligne, :taille_colonne, :numero, :grilleS, :mode
         private_class_method :new
 
-        def GrilleStatique.creer(unNumero)
-            new(unNumero)
+        def GrilleStatique.creer(unNumero, mode)
+            new(unNumero, mode)
         end
 
         ##
         # La GrilleStatique est créée en fonction de son numéro qui correspond à une ligne d'un fichier contenant l'état de ses cases
-        def initialize(unNumero)
+        def initialize(unNumero, mode)
+            @mode = mode
             @grilleS = Grille.new
             ligneGrille = Array.new
 
             @numero = unNumero
 
-            fichierGrille = File.new("../Grilles/GrillesAventure.txt", "r")
+            fichierGrille = File.new("Grilles/#{@mode}", "r+")
             ligneFichier = fichierGrille.readlines[@numero-1]
             fichierGrille.close
 

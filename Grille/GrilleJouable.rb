@@ -26,15 +26,15 @@ module Grille
         attr_reader :erreur, :locErreur, :grille, :solution, :classement
         private_class_method :new
 
-        def GrilleJouable.creer(unNumero)
-            new(unNumero)
+        def GrilleJouable.creer(unNumero, mode)
+            new(unNumero, mode)
         end
 
         ##
         # La Grille Jouable est créée à l'aide de la grille solution en changeant l'état de toutes ses cases non numérique en "BLANC"
         # Initialisation du tableau contenant de futurs erreurs,
         def initialize(unNumero)
-            @solution = GrilleStatique.creer(unNumero)
+            @solution = GrilleStatique.creer(unNumero, mode)
             @grille = Grille.new()
             ligneGrille = Array.new()
             
@@ -95,7 +95,7 @@ module Grille
         # Charge une grille d'un utilisateur à l'aide de l'historique
         # ATTENTION : NON TESTE
         def chargerGrille(unUtilisateur)
-            Historique.Ouvrir(unUtilisateur, self.grille).replay{ |c| 
+            Sauvegarde::Historique.Ouvrir(unUtilisateur, self.grille).replay{ |c| 
                 self.grille.grille.case[c.ligne][c.colonne].etatCase = c.etat_apres}
         end
 
@@ -123,15 +123,6 @@ module Grille
                     unUtilisateur.aventure = self.solution.numero
                 end
             end
-        end
-
-        def to_s()
-            str = ""
-            @grille.grille.each { |ligne|
-                ligne.each{ |cases| str += cases.to_s}
-                str += "\n"
-            }
-            return str + "\n"
         end
     end
 end
