@@ -37,7 +37,7 @@ module Grille
 
             @numero = unNumero
 
-            fichierGrille = File.new("Grilles/#{@mode}", "r+")
+            fichierGrille = File.new("../Grilles/#{@mode}", "r+")
             ligneFichier = fichierGrille.readlines[@numero-1]
             fichierGrille.close
 
