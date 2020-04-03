@@ -10,7 +10,7 @@ module Utilisateur
     end
 
     def initialize(nom)
-      Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+      Dir.chdir("UtilisateurJeu")
       fichier = File.open("#{nom}",'a+')
 
       @nom = nom
@@ -30,12 +30,12 @@ module Utilisateur
     end
 
     def self.comptesUtilisateurs()
-      Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+      Dir.chdir("UtilisateurJeu")
       return Dir.glob("*[^.rb]").sort
     end
 
     def sauvegarde
-      Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+      Dir.chdir("UtilisateurJeu")
       fichier = File.open("#{self.nom}",'w')
 
       Marshal.dump(self, fichier)
@@ -43,7 +43,7 @@ module Utilisateur
     end
 
     def self.chargerUtilisateur(unUtilisateur)
-      Dir.chdir("/home/linux/Documents/Nurikabe/Utilisateur")
+      Dir.chdir("UtilisateurJeu")
       fichier = File.open("#{unUtilisateur.nom}", 'r')
 
       return Marshal.load(fichier)
