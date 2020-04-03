@@ -24,7 +24,7 @@ module Classement
         # Un classement est créé en même temps que le fichier dans lequel il sera stocké
         # C'est un simple tableau contenant le pseudo des joueurs et leur meilleur temps
         def initialize(uneGrille)
-            Dir.chdir("/home/linux/Documents/Nurikabe/Classement")
+            Dir.chdir("Classement")
             fichier = File.open("Classement_Grille_#{uneGrille.numero}", 'a+')
             fichier.close
 
@@ -56,7 +56,7 @@ module Classement
             self.classement.each{ |user|
                 if user[0] == unUtilisateur.nom
                     return self.classement.index(user)
-                end      
+                end
             }
             return nil
         end
