@@ -1,5 +1,5 @@
 require_relative 'Case.rb'
-require_relative '../Sauvegarde/Historique.rb' 
+require_relative '../Historique/Historique.rb' 
 
 module Grille
 
@@ -46,12 +46,6 @@ module Grille
             self.etatCase = unEtat
 
             return self
-        end
-
-
-
-        def to_s
-            return @@etatPossible[self.etatCase]
         end
 
     end

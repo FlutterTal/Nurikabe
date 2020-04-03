@@ -36,7 +36,7 @@ module Grille
 
             @numero = unNumero
 
-            fichierGrille = File.new("../Grilles.txt", "r")
+            fichierGrille = File.new("../Grilles/GrillesAventure.txt", "r")
             ligneFichier = fichierGrille.readlines[@numero-1]
             fichierGrille.close
 
@@ -63,18 +63,6 @@ module Grille
         # Retourne la case de la ligne l et de la colonne c
         def case_plateau(l,c)
             return self.grilleS.grille[l][c]
-        end
-
-
-        ##
-        # A supprimer quand tout marche
-        def to_s()
-            str = ""
-            @grilleS.grille.each { |ligne|
-                ligne.each{ |cases| str += cases.to_s}
-                str +="\n"
-            }
-            return str + "\n"
         end
     end
 end

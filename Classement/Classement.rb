@@ -2,7 +2,6 @@ require_relative '../Grille/GrilleJouable.rb'
 require_relative '../Utilisateur/Utilisateur.rb'
 
 module Classement
-
     ##
     # La Classe Classement
     # Elle permet la création du classment des joueur pour une grille: @classement
@@ -82,16 +81,6 @@ module Classement
         def self.chargerClassement(unFichier)
             fichier = File.open(unFichier, 'r+')
             return Marshal.load(fichier)
-        end
-
-
-
-        def afficher()
-            self.to_s
-        end
-
-        def to_s
-            return self.classement
         end
     end
 end
