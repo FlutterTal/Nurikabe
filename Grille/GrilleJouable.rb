@@ -33,7 +33,7 @@ module Grille
         ##
         # La Grille Jouable est créée à l'aide de la grille solution en changeant l'état de toutes ses cases non numérique en "BLANC"
         # Initialisation du tableau contenant de futurs erreurs,
-        def initialize(unNumero)
+        def initialize(unNumero, mode)
             @solution = GrilleStatique.creer(unNumero, mode)
             @grille = Grille.new()
             ligneGrille = Array.new()
@@ -52,7 +52,7 @@ module Grille
 
             @locErreur = Array.new()
             @erreur = nil
-            @classement = Classement.Creer(@solution)
+            @classement = Classement::Classement.Creer(@solution)
             
         end
 
