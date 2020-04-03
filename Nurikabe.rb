@@ -25,6 +25,9 @@ class Nurikabe < Gtk::Application
         
     private_class_method :new
     
+    ## Utilisateur courant
+    attr_reader :utilisateur
+    
     ##
     # Crée une nouvelle application.
     #
@@ -40,9 +43,20 @@ class Nurikabe < Gtk::Application
         self.signal_connect("activate") {
             fenetre = Gui::Fenetre.new
             fenetre.signal_connect("destroy") { self.quit }
-            selecteur = Gui::SelecteurUtilisateur.new(fenetre, [], self)
+            selecteur = Gui::SelecteurUtilisateur.new(fenetre, self)
             self.add_window(fenetre)
         }
+    end
+    
+    ##
+    # Définit l'utilisateur courant.
+    #
+    # Ne peut être utilisé qu'une fois.
+    #
+    # Paramètres :
+    # [+utilisateur+]   Utilisateur courant
+    def utilisateur=(utilisateur)
+        @utilisateur = utilisateur if(@utilisateur.nil?)
     end
     
 end

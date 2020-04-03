@@ -1,4 +1,5 @@
 require 'gtk3'
+require_relative '../Utilisateur/Utilisateur.rb'
 
 module Gui
     
@@ -11,15 +12,15 @@ module Gui
         class Ligne < Gtk::Box
         
             ##
-            # Utilisateur concerné
-            attr_reader :utilisateur
+            # Nom de l'utilisateur concerné (String)
+            attr_reader :nom
             
             ##
             # Crée une ligne qui accueillera les données de l'utilisateur.
             #
             # Paramètres :
-            # [+utilisateur+]   Utilisateur
-            def initialize(utilisateur)
+            # [+nom+]   Nom de l'utilisateur (String)
+            def initialize(nom)
                 super(:horizontal)
                 icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
                 icone.pixel_size = 48
@@ -33,11 +34,9 @@ module Gui
                 @label.margin_top = 4
                 @label.margin_bottom = 4
                 @label.margin_right = 4
-                @label.markup = "<b>#{utilisateur.nom}</b>\n" + 
-                        "<span weight=\"light\" style=\"italic\"> Crédit : " +
-                        "#{utilisateur.credit}</span>"
+                @label.markup = "<b>#{nom}</b>"
                 @label.show
-                @utilisateur = utilisateur
+                @nom = nom
                 self.pack_start(@label)
                 self.show
             end
@@ -105,9 +104,8 @@ module Gui
         #
         # Paramètres :
         # [+parent+]        Fenêtre parente au sélecteur d'utilisateur
-        # [+utilisateurs+]  Utilisateurs à ajouter (Array de Utilisateur)
         # [+app+]           Application (Nurikabe)
-        def initialize(parent, utilisateurs, app = nil)
+        def initialize(parent, app = nil)
             super(parent: parent)
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
@@ -117,10 +115,13 @@ module Gui
             @liste = Gtk::ListBox.new
             @liste.selection_mode = :single
             @liste.signal_connect("row-activated") { |liste, ligne|
-                puts "Utilisateur #{ligne.children[0].utilisateur} sélectionné"
+                app.utilisateur = Utilisateur::Utilisateur.chargerUtilisateur(
+                    ligne.children[0].nom) if(app)
                 self.close
             }
-            utilisateurs.each { |u| @liste.insert(Ligne.new(u), -1) }
+            Utilisateur::Utilisateur.comptesUtilisateurs.each { |nom|
+                @liste.insert(Ligne.new(nom), -1)
+            }
             @liste.show
             scrolled_window.add_with_viewport(@liste)
             scrolled_window.expand = true
