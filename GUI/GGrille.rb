@@ -23,10 +23,10 @@ module Gui
             grille.grille.grille.each do |ligne|
                 ligne.each do |c|
                     gc = nil
-                    if(c.kind_of? CaseJouable)
+                    if(c.kind_of? Grille::CaseJouable)
                     then
                         gc = GCaseJouable.creer(c)
-                    elsif(c.kind_of? CaseNumero) then
+                    elsif(c.kind_of? Grille::CaseNumero) then
                         gc = GCaseNumero.creer(c)
                     else
                         raise "Classe invalide pour la case #{c.class}"
