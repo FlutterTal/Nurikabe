@@ -57,3 +57,7 @@ build-iPhoneSimulator/
 
 # Classements
 /Classement/Classement_Grille_*
+
+# Utilisateurs
+
+/UtilisateurJeu/

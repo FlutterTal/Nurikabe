@@ -33,6 +33,7 @@ class Nurikabe < Gtk::Application
     #
     # Méthode privée, utiliser Nurikabe::app pour créer l'application.
     def initialize
+        Dir.mkdir("UtilisateurJeu") unless(Dir.exist? "UtilisateurJeu")
         super("org.projet.Nurikabe", :flags_none)
         provider = Gtk::CssProvider.new
         provider.load(path: "GUI/grille.css")
