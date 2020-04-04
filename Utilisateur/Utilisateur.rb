@@ -29,7 +29,9 @@ module Utilisateur
     end
 
     def self.comptesUtilisateurs()
-      return Dir.glob("UtilisateurJeu/*[^.rb]").sort
+      return Dir.glob("UtilisateurJeu/*[^.rb]").sort.map { |chemin|
+        chemin.gsub(/^UtilisateurJeu\//, "")
+      }
     end
 
     def sauvegarde
