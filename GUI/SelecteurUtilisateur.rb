@@ -22,22 +22,25 @@ module Gui
             # [+nom+]   Nom de l'utilisateur (String)
             def initialize(nom)
                 super(:horizontal)
-                icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
-                icone.pixel_size = 48
-                icone.margin_left = 4
-                icone.margin_right = 4
-                icone.margin_top = 4
-                icone.margin_bottom = 4
-                icone.show
-                self.pack_start(icone)
-                @label = Gtk::Label.new
-                @label.margin_top = 4
-                @label.margin_bottom = 4
-                @label.margin_right = 4
-                @label.markup = "<b>#{nom}</b>"
-                @label.show
                 @nom = nom
-                self.pack_start(@label)
+                self.pack_start(Gtk::Image.new(
+                    icon_name: 'user', size: :dialog).yield_self { |icone|
+                    icone.pixel_size = 48
+                    icone.margin_left = 4
+                    icone.margin_right = 4
+                    icone.margin_top = 4
+                    icone.margin_bottom = 4
+                    icone.show
+                    icone
+                })
+                self.pack_start(Gtk::Label.new.yield_self { |label|
+                    label.margin_top = 4
+                    label.margin_bottom = 4
+                    label.margin_right = 4
+                    label.markup = "<b>#{nom}</b>"
+                    label.show
+                    label
+                })
                 self.show
             end
             
@@ -135,32 +138,38 @@ module Gui
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
             self.default_height = 400
-            box = Gtk::Box.new(:vertical)
-            scrolled_window = Gtk::ScrolledWindow.new
-            @liste = Gtk::ListBox.new
-            @liste.selection_mode = :single
-            @liste.signal_connect("row-activated") { |liste, ligne|
-                app.utilisateur = Utilisateur::Utilisateur.chargerUtilisateur(
-                    ligne.children[0]) if(app)
-                self.close
-            }
-            Utilisateur::Utilisateur.comptesUtilisateurs.each { |nom|
-                @liste.insert(Ligne.new(nom), -1)
-            }
-            @liste.show
-            scrolled_window.add_with_viewport(@liste)
-            scrolled_window.expand = true
-            scrolled_window.show
-            box.pack_start(scrolled_window, {fill: true})
-            nouvel_utilisateur = Gtk::Button.new(label: "Nouvel utilisateur")
-            nouvel_utilisateur.signal_connect("clicked") { |bouton|
-                NouvelUtilisateurDialogue.new(self, app)
-            }
-            nouvel_utilisateur.show
-            box.pack_end(nouvel_utilisateur)
-            box.expand = true
-            box.show
-            self.content_area.add(box)
+            self.content_area.add(Gtk::Box.new(:vertical).yield_self { |box|
+                box.pack_start(Gtk::ScrolledWindow.new.yield_self { |sw|
+                    sw.add_with_viewport(Gtk::ListBox.new.yield_self { |liste|
+                        @liste = liste
+                        @liste.selection_mode = :single
+                        @liste.signal_connect("row-activated") { |liste, ligne|
+                            app.utilisateur = Utilisateur::Utilisateur.
+                                chargerUtilisateur(ligne.children[0]) if(app)
+                            self.close
+                        }
+                        Utilisateur::Utilisateur.comptesUtilisateurs.
+                            each { |nom|
+                            @liste.insert(Ligne.new(nom), -1)
+                        }
+                        @liste.show
+                    })
+                    sw.expand = true
+                    sw.show
+                    sw
+                }, {fill: true})
+                box.pack_end(Gtk::Button.new(
+                    label: "Nouvel utilisateur").yield_self { |bouton|
+                    bouton.signal_connect("clicked") {
+                        NouvelUtilisateurDialogue.new(self, app)
+                    }
+                    bouton.show
+                    bouton
+                }
+                box.expand = true
+                box.show
+                box
+            })
             self.signal_connect("destroy") {
                 if(app.nil?) then
                     Gtk.main_quit
