@@ -10,8 +10,7 @@ module Utilisateur
     end
 
     def initialize(nom)
-      Dir.chdir("UtilisateurJeu")
-      fichier = File.open("#{nom}",'a+')
+      fichier = File.open("UtilisateurJeu/#{nom}",'a+')
 
       @nom = nom
       @credit = 0
@@ -30,21 +29,18 @@ module Utilisateur
     end
 
     def self.comptesUtilisateurs()
-      Dir.chdir("UtilisateurJeu")
-      return Dir.glob("*[^.rb]").sort
+      return Dir.glob("UtilisateurJeu/*[^.rb]").sort
     end
 
     def sauvegarde
-      Dir.chdir("UtilisateurJeu")
-      fichier = File.open("#{self.nom}",'w')
+      fichier = File.open("UtilisateurJeu/#{self.nom}",'w')
 
       Marshal.dump(self, fichier)
       fichier.close
     end
 
     def self.chargerUtilisateur(unUtilisateur)
-      Dir.chdir("UtilisateurJeu")
-      fichier = File.open("#{unUtilisateur.nom}", 'r')
+      fichier = File.open("UtilisateurJeu/#{unUtilisateur.nom}", 'r')
 
       return Marshal.load(fichier)
     end
