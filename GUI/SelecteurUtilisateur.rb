@@ -61,35 +61,60 @@ module Gui
             #
             # Paramètres :
             # [+parent+]    Fenêtre parente à la boîte de dialogue
-            def initialize(parent)
-                super(parent: parent)
-                box_principale = Gtk::Box.new(:horizontal)
-                box_principale.expand = true
-                icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
-                icone.pixel_size = 64
-                icone.margin_left = 4
-                icone.margin_right = 4
-                icone.margin_top = 4
-                icone.margin_bottom = 4
-                icone.show
-                box_principale.pack_start(icone)
-                box_secondaire = Gtk::Box.new(:vertical)
-                box_secondaire.expand = true
-                label = Gtk::Label.new("Nom d'utilisateur :")
-                label.xalign = 0
-                label.show
-                box_secondaire.pack_start(label)
-                champs = Gtk::Entry.new
-                champs.show
-                box_secondaire.pack_start(champs)
-                box_secondaire.show
-                box_principale.add(box_secondaire)
-                box_principale.show
-                self.content_area.add(box_principale)
+            # [+app+]       Application (Nurikabe)
+            def initialize(parent, app)
+                super(title: "Nouvel utilisateur", parent: parent,
+                      flags: Gtk::DialogFlags::USE_HEADER_BAR |
+                      Gtk::DialogFlags::MODAL |
+                      Gtk::DialogFlags::DESTROY_WITH_PARENT)
+                champs = Gtk::Entry.new.yield_self { |champs|
+                    champs.signal_connect("activate") {
+                        self.signal_emit("response", CREER)
+                    }
+                    champs.show
+                    champs
+                }
+                self.content_area.add(
+                    Gtk::Box.new(:horizontal).yield_self { |box|
+                    box.expand = true
+                    box.pack_start(
+                        Gtk::Image.new(icon_name: 'user',
+                                       size: :dialog).yield_self { |icone|
+                        icone.pixel_size = 64
+                        icone.margin_left = 4
+                        icone.margin_right = 4
+                        icone.margin_top = 4
+                        icone.margin_bottom = 4
+                        icone.show
+                        icone
+                    })
+                    box.add(Gtk::Box.new(:vertical).yield_self { |box2|
+                        box2.expand = true
+                        box2.pack_start(Gtk::Label.new(
+                            "Nom d'utilisateur :").yield_self { |label|
+                            label.xalign = 0
+                            label.show
+                            label
+                        })
+                        box2.pack_start(champs)
+                        box2.show
+                        box2
+                    })
+                    box.show
+                    box
+                })
                 self.add_button("Annuler", ANNULER)
                 self.add_button("Créer un utilisateur", CREER)
                 self.signal_connect("response") { |dialogue, action|
                     case action
+                    when CREER then
+                        unless(champs.text.empty?) then
+                            app.utilisateur = Utilisateur::Utilisateur.Creer(
+                                champs.text)
+                            app.utilisateur.sauvegarde
+                            dialogue.close
+                            parent.close
+                        end
                     when ANNULER then
                         dialogue.close
                     end
@@ -116,7 +141,7 @@ module Gui
             @liste.selection_mode = :single
             @liste.signal_connect("row-activated") { |liste, ligne|
                 app.utilisateur = Utilisateur::Utilisateur.chargerUtilisateur(
-                    ligne.children[0].nom) if(app)
+                    ligne.children[0]) if(app)
                 self.close
             }
             Utilisateur::Utilisateur.comptesUtilisateurs.each { |nom|
@@ -129,7 +154,7 @@ module Gui
             box.pack_start(scrolled_window, {fill: true})
             nouvel_utilisateur = Gtk::Button.new(label: "Nouvel utilisateur")
             nouvel_utilisateur.signal_connect("clicked") { |bouton|
-                NouvelUtilisateurDialogue.new(self)
+                NouvelUtilisateurDialogue.new(self, app)
             }
             nouvel_utilisateur.show
             box.pack_end(nouvel_utilisateur)

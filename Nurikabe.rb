@@ -58,6 +58,7 @@ class Nurikabe < Gtk::Application
     # [+utilisateur+]   Utilisateur courant
     def utilisateur=(utilisateur)
         @utilisateur = utilisateur if(@utilisateur.nil?)
+        puts utilisateur
     end
     
 end
