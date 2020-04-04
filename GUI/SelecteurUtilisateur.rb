@@ -165,7 +165,7 @@ module Gui
                     }
                     bouton.show
                     bouton
-                }
+                })
                 box.expand = true
                 box.show
                 box
