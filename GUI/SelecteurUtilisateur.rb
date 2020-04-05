@@ -67,9 +67,7 @@ module Gui
             # [+app+]       Application (Nurikabe)
             def initialize(parent, app)
                 super(title: "Nouvel utilisateur", parent: parent,
-                      flags: Gtk::DialogFlags::USE_HEADER_BAR |
-                      Gtk::DialogFlags::MODAL |
-                      Gtk::DialogFlags::DESTROY_WITH_PARENT)
+                      flags: Gtk::DialogFlags::USE_HEADER_BAR)
                 champs = Gtk::Entry.new.yield_self { |champs|
                     champs.signal_connect("activate") {
                         self.signal_emit("response", CREER)
@@ -173,7 +171,7 @@ module Gui
             self.signal_connect("destroy") {
                 if(app.nil?) then
                     Gtk.main_quit
-                else
+                elsif(app.utilisateur.nil?) then
                     app.quit
                 end
             }

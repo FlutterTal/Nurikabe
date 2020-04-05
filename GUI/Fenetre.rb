@@ -8,14 +8,19 @@ module Gui
         
         ##
         # Crée une fenêtre principale.
-        def initialize
-            super
+        #
+        # Paramètres :
+        # [+app+]   Application (Nurikabe)
+        def initialize(app)
+            super()
             self.icon_name = "applications-games"
-            barre_titre = Gtk::HeaderBar.new
-            barre_titre.title = "Nurikabe"
-            barre_titre.show_close_button = true
-            barre_titre.show
-            self.titlebar = barre_titre
+            self.titlebar = Gtk::HeaderBar.new.yield_self { |barre_titre|              
+                barre_titre.title = "Nurikabe"
+                barre_titre.show_close_button = true
+                barre_titre.show
+                barre_titre
+            }
+            self.signal_connect("destroy") { app.quit }
             self.show
         end
         

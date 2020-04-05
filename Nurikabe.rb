@@ -42,8 +42,7 @@ class Nurikabe < Gtk::Application
             provider,
             20000)
         self.signal_connect("activate") {
-            fenetre = Gui::Fenetre.new
-            fenetre.signal_connect("destroy") { self.quit }
+            fenetre = Gui::Fenetre.new(self)
             selecteur = Gui::SelecteurUtilisateur.new(fenetre, self)
             self.add_window(fenetre)
         }
@@ -58,7 +57,6 @@ class Nurikabe < Gtk::Application
     # [+utilisateur+]   Utilisateur courant
     def utilisateur=(utilisateur)
         @utilisateur = utilisateur if(@utilisateur.nil?)
-        puts utilisateur
     end
     
 end
