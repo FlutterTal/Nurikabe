@@ -4,6 +4,7 @@ require 'gtk3'
 require_relative 'Grille/GrilleJouable.rb'
 require_relative 'GUI/Fenetre.rb'
 require_relative 'GUI/SelecteurUtilisateur.rb'
+require_relative 'GUI/Accueil.rb'
 
 ##
 # Application
@@ -13,6 +14,8 @@ class Nurikabe < Gtk::Application
 
     # Application
     @@app = nil
+    
+    # @fenetre  => Fenêtre principale de l'application
 
     ##
     # Retourne l'application.
@@ -42,9 +45,10 @@ class Nurikabe < Gtk::Application
             provider,
             20000)
         self.signal_connect("activate") {
-            fenetre = Gui::Fenetre.new(self)
-            selecteur = Gui::SelecteurUtilisateur.new(fenetre, self)
-            self.add_window(fenetre)
+            @fenetre = Gui::Fenetre.new(self)
+            self.accueil
+            selecteur = Gui::SelecteurUtilisateur.new(@fenetre, self)
+            self.add_window(@fenetre)
         }
     end
     
@@ -57,6 +61,40 @@ class Nurikabe < Gtk::Application
     # [+utilisateur+]   Utilisateur courant
     def utilisateur=(utilisateur)
         @utilisateur = utilisateur if(@utilisateur.nil?)
+    end
+    
+    ##
+    # Affiche l'accueil
+    def accueil
+        accueil = Gui::Accueil.new(self)
+        @fenetre.remove(@fenetre.child) if(@fenetre.child)
+        @fenetre.child = accueil
+        @fenetre.titlebar = accueil.titlebar
+        return self
+    end
+    
+    ##
+    # Affiche la section _Tutoriel_.
+    def tutoriel
+        puts "Tutoriel"
+    end
+    
+    ##
+    # Affiche la liste des grilles aventures.
+    def aventure
+        puts "Aventure"
+    end
+    
+    ##
+    # Affiche la liste des grilles arcades.
+    def arcade
+        puts "Arcade"
+    end
+    
+    ##
+    # Affiche les options.
+    def options
+        puts "Options"
     end
     
 end

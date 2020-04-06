@@ -67,7 +67,9 @@ module Gui
             # [+app+]       Application (Nurikabe)
             def initialize(parent, app)
                 super(title: "Nouvel utilisateur", parent: parent,
-                      flags: Gtk::DialogFlags::USE_HEADER_BAR)
+                      flags: Gtk::DialogFlags::USE_HEADER_BAR |
+                      Gtk::DialogFlags::MODAL |
+                      Gtk::DialogFlags::DESTROY_WITH_PARENT)
                 champs = Gtk::Entry.new.yield_self { |champs|
                     champs.signal_connect("activate") {
                         self.signal_emit("response", CREER)
@@ -113,6 +115,7 @@ module Gui
                             app.utilisateur = Utilisateur::Utilisateur.Creer(
                                 champs.text)
                             app.utilisateur.sauvegarde
+                            app.accueil
                             dialogue.close
                             parent.close
                         end
@@ -132,7 +135,8 @@ module Gui
         # [+parent+]        Fenêtre parente au sélecteur d'utilisateur
         # [+app+]           Application (Nurikabe)
         def initialize(parent, app = nil)
-            super(parent: parent)
+            super(parent: parent, flags: Gtk::DialogFlags::MODAL |
+                  Gtk::DialogFlags::DESTROY_WITH_PARENT)
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
             self.default_height = 400
@@ -144,6 +148,7 @@ module Gui
                         @liste.signal_connect("row-activated") { |liste, ligne|
                             app.utilisateur = Utilisateur::Utilisateur.
                                 chargerUtilisateur(ligne.children[0]) if(app)
+                            app.accueil
                             self.close
                         }
                         Utilisateur::Utilisateur.comptesUtilisateurs.
