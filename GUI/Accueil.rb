@@ -17,13 +17,17 @@ module Gui
         # [+app+]   Application (Nurikabe)
         def initialize(app)
             super(:vertical, 10)
-
+            
             self.pack_start(Gtk::Button.new.yield_self { |bouton|
                 bouton.add(Gtk::Label.new.yield_self { |label|
                     label.set_markup("<b>Tutoriel</b>")
                     label.show
                     label
                 })
+                bouton.margin_top = 100
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
                 bouton.signal_connect("clicked") { app.tutoriel }
                 bouton.show
                 bouton
@@ -35,6 +39,10 @@ module Gui
                     label.show
                     label
                 })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
                 bouton.signal_connect("clicked") { app.aventure }
                 bouton.show
                 bouton
@@ -46,6 +54,10 @@ module Gui
                     label.show
                     label
                 })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
                 bouton.signal_connect("clicked") { app.arcade }
                 bouton.show
                 bouton
@@ -57,6 +69,10 @@ module Gui
                     label.show
                     label
                 })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 100
+                bouton.margin_left = 100
+                bouton.margin_right = 100
                 bouton.signal_connect("clicked") { app.options }
                 bouton.show
                 bouton

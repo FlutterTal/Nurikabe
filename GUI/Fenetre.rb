@@ -13,6 +13,8 @@ module Gui
         # [+app+]   Application (Nurikabe)
         def initialize(app)
             super()
+            self.default_width = 800
+            self.default_height = 600
             self.icon_name = "applications-games"
             self.titlebar = Gtk::HeaderBar.new.yield_self { |barre_titre|              
                 barre_titre.title = "Nurikabe"
