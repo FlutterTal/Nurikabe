@@ -32,7 +32,7 @@ module Gui
             
             f.set_window_position(Gtk::WindowPosition::CENTER)
             
-            f.add(GGrille.creer(grille))
+            f.add(GGrille.new(grille))
             
             f.show
             
