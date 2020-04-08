@@ -5,6 +5,7 @@ require_relative 'Grille/GrilleJouable.rb'
 require_relative 'GUI/Fenetre.rb'
 require_relative 'GUI/SelecteurUtilisateur.rb'
 require_relative 'GUI/Accueil.rb'
+require_relative 'GUI/SelecteurGrille.rb'
 
 ##
 # Application
@@ -82,19 +83,30 @@ class Nurikabe < Gtk::Application
     ##
     # Affiche la liste des grilles aventures.
     def aventure
-        puts "Aventure"
+        return selecteur_grilles("Aventure")
     end
     
     ##
     # Affiche la liste des grilles arcades.
     def arcade
-        puts "Arcade"
+        return selecteur_grilles("Arcade")
     end
     
     ##
     # Affiche les options.
     def options
         puts "Options"
+    end
+    
+    private
+    
+    # Affiche la liste des grilles du mode donné
+    def selecteur_grilles(mode)
+        selecteur = Gui::SelecteurGrille.new(self, mode)
+        @fenetre.remove(@fenetre.child) if(@fenetre.child)
+        @fenetre.child = selecteur
+        @fenetre.titlebar = selecteur.titlebar
+        return self
     end
     
 end

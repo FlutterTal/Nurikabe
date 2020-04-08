@@ -24,11 +24,11 @@ module Gui
                 grille
             })
             self.show
-            @titlebar = Gtk::Titlebar.new.yield_self { |barre|
+            @titlebar = Gtk::HeaderBar.new.yield_self { |barre|
                 barre.title = "Grilles " + mode
                 barre.subtitle = app.utilisateur.nom
                 barre.show_close_button = true
-                barre.pack_start(BoutonRetour.new.yield_self{ |bouton|
+                barre.pack_start(BoutonRetour.new.yield_self { |bouton|
                     bouton.signal_connect("clicked") { app.accueil }
                     bouton
                 })
