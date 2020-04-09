@@ -24,8 +24,7 @@ module Classement
         # Un classement est créé en même temps que le fichier dans lequel il sera stocké
         # C'est un simple tableau contenant le pseudo des joueurs et leur meilleur temps
         def initialize(uneGrille)
-            Dir.chdir("Classement")
-            fichier = File.open("Classement_Grille_#{uneGrille.numero}", 'a+')
+            fichier = File.open("Classement/Classement_Grille_#{uneGrille.numero}", 'a+')
             fichier.close
 
             @fichier = "Classement_Grille_#{uneGrille.numero}"

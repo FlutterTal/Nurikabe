@@ -16,11 +16,10 @@ module Gui
             self.default_width = 800
             self.default_height = 600
             self.icon_name = "applications-games"
-            self.titlebar = Gtk::HeaderBar.new.yield_self { |barre_titre|              
+            self.titlebar = Gtk::HeaderBar.new.tap { |barre_titre|              
                 barre_titre.title = "Nurikabe"
                 barre_titre.show_close_button = true
                 barre_titre.show
-                barre_titre
             }
             self.signal_connect("destroy") { app.quit }
             self.show
