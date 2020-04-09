@@ -1,4 +1,5 @@
 require 'gtk3'
+require_relative '../Utilisateur/Utilisateur.rb'
 
 module Gui
     
@@ -9,51 +10,37 @@ module Gui
         ##
         # Ligne du sélecteur d'utilisateur représentant un utilisateur.
         class Ligne < Gtk::Box
-            
+        
             ##
-            # Label où sont écrites les informations (Gtk::Label)
-            attr_reader :label
-            
-            ##
-            # Utilisateur concerné
-            attr_accessor :utilisateur
-            
-            private_class_method :new
-            
-            ##
-            # Crée une ligne pour l'utilisateur donné.
-            #
-            # Paramètres :
-            # [+utilisateur+]   Utilisateur
-            def Ligne.creer(utilisateur)
-                ligne = new
-                ligne.label.markup = "<b>#{utilisateur.nom}</b>\n" + 
-                        "<span weight=\"light\" style=\"italic\"> Crédit : " +
-                        "#{utilisateur.credit}</span>"
-                ligne.utilisateur = utilisateur
-                return ligne
-            end
+            # Nom de l'utilisateur concerné (String)
+            attr_reader :nom
             
             ##
             # Crée une ligne qui accueillera les données de l'utilisateur.
             #
-            # Méthode privée, utiliser Gui::SelecteurUtilisateur::Ligne.creer.
-            def initialize
+            # Paramètres :
+            # [+nom+]   Nom de l'utilisateur (String)
+            def initialize(nom)
                 super(:horizontal)
-                icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
-                icone.pixel_size = 48
-                icone.margin_left = 4
-                icone.margin_right = 4
-                icone.margin_top = 4
-                icone.margin_bottom = 4
-                icone.show
-                self.pack_start(icone)
-                @label = Gtk::Label.new
-                @label.margin_top = 4
-                @label.margin_bottom = 4
-                @label.margin_right = 4
-                @label.show
-                self.pack_start(@label)
+                @nom = nom
+                self.pack_start(Gtk::Image.new(
+                    icon_name: 'user', size: :dialog).yield_self { |icone|
+                    icone.pixel_size = 48
+                    icone.margin_left = 4
+                    icone.margin_right = 4
+                    icone.margin_top = 4
+                    icone.margin_bottom = 4
+                    icone.show
+                    icone
+                })
+                self.pack_start(Gtk::Label.new.yield_self { |label|
+                    label.margin_top = 4
+                    label.margin_bottom = 4
+                    label.margin_right = 4
+                    label.markup = "<b>#{nom}</b>"
+                    label.show
+                    label
+                })
                 self.show
             end
             
@@ -77,35 +64,61 @@ module Gui
             #
             # Paramètres :
             # [+parent+]    Fenêtre parente à la boîte de dialogue
-            def initialize(parent)
-                super(parent: parent)
-                box_principale = Gtk::Box.new(:horizontal)
-                box_principale.expand = true
-                icone = Gtk::Image.new(icon_name: 'user', size: :dialog)
-                icone.pixel_size = 64
-                icone.margin_left = 4
-                icone.margin_right = 4
-                icone.margin_top = 4
-                icone.margin_bottom = 4
-                icone.show
-                box_principale.pack_start(icone)
-                box_secondaire = Gtk::Box.new(:vertical)
-                box_secondaire.expand = true
-                label = Gtk::Label.new("Nom d'utilisateur :")
-                label.xalign = 0
-                label.show
-                box_secondaire.pack_start(label)
-                champs = Gtk::Entry.new
-                champs.show
-                box_secondaire.pack_start(champs)
-                box_secondaire.show
-                box_principale.add(box_secondaire)
-                box_principale.show
-                self.content_area.add(box_principale)
+            # [+app+]       Application (Nurikabe)
+            def initialize(parent, app)
+                super(title: "Nouvel utilisateur", parent: parent,
+                      flags: Gtk::DialogFlags::USE_HEADER_BAR |
+                      Gtk::DialogFlags::MODAL |
+                      Gtk::DialogFlags::DESTROY_WITH_PARENT)
+                champs = Gtk::Entry.new.yield_self { |champs|
+                    champs.signal_connect("activate") {
+                        self.signal_emit("response", CREER)
+                    }
+                    champs.show
+                    champs
+                }
+                self.content_area.add(
+                    Gtk::Box.new(:horizontal).yield_self { |box|
+                    box.expand = true
+                    box.pack_start(
+                        Gtk::Image.new(icon_name: 'user',
+                                       size: :dialog).yield_self { |icone|
+                        icone.pixel_size = 64
+                        icone.margin_left = 4
+                        icone.margin_right = 4
+                        icone.margin_top = 4
+                        icone.margin_bottom = 4
+                        icone.show
+                        icone
+                    })
+                    box.add(Gtk::Box.new(:vertical).yield_self { |box2|
+                        box2.expand = true
+                        box2.pack_start(Gtk::Label.new(
+                            "Nom d'utilisateur :").yield_self { |label|
+                            label.xalign = 0
+                            label.show
+                            label
+                        })
+                        box2.pack_start(champs)
+                        box2.show
+                        box2
+                    })
+                    box.show
+                    box
+                })
                 self.add_button("Annuler", ANNULER)
                 self.add_button("Créer un utilisateur", CREER)
                 self.signal_connect("response") { |dialogue, action|
                     case action
+                    when CREER then
+                        unless(champs.text.empty?) then
+                            app.utilisateur = Utilisateur::Utilisateur.Creer(
+                                champs.text)
+                            app.utilisateur.sauvegarde
+                            app.accueil
+                            dialogue.close
+                            parent.close
+                        end
                     when ANNULER then
                         dialogue.close
                     end
@@ -116,58 +129,57 @@ module Gui
         end
         
         ##
-        # Gtk::ListBox contenant les Gtk::SelecteurUtilisateur::Ligne
-        attr_reader :liste
-        
-        private_class_method :new
-        
-        ##
-        # Crée un sélecteur d'utilisateurs.
+        # Crée la fenêtre du sélecteur d'utilisateur.
         #
         # Paramètres :
         # [+parent+]        Fenêtre parente au sélecteur d'utilisateur
-        # [+utilisateurs+]  Utilisateurs à ajouter (Array de Utilisateur)
-        def SelecteurUtilisateur.creer(parent, utilisateurs)
-            selecteur = new(parent)
-            utilisateurs.each { |u| selecteur.liste.insert(Ligne.creer(u), -1) }
-            return selecteur
-        end
-        
-        ##
-        # Crée la fenêtre du sélecteur d'utilisateur.
-        #
-        # Méthode privée, utiliser Gui::SelecteurUtilisateur.creer.
-        #
-        # Paramètres :
-        # [+parent+]    Fenêtre parente au sélecteur d'utilisateur
-        def initialize(parent)
-            super(parent: parent)
+        # [+app+]           Application (Nurikabe)
+        def initialize(parent, app = nil)
+            super(parent: parent, flags: Gtk::DialogFlags::MODAL |
+                  Gtk::DialogFlags::DESTROY_WITH_PARENT)
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
             self.default_height = 400
-            box = Gtk::Box.new(:vertical)
-            scrolled_window = Gtk::ScrolledWindow.new
-            @liste = Gtk::ListBox.new
-            @liste.selection_mode = :single
-            @liste.signal_connect("row-activated") { |liste, ligne|
-                puts "Utilisateur #{ligne.children[0].utilisateur} sélectionné"
-                self.close
+            self.content_area.add(Gtk::Box.new(:vertical).yield_self { |box|
+                box.pack_start(Gtk::ScrolledWindow.new.yield_self { |sw|
+                    sw.add_with_viewport(Gtk::ListBox.new.yield_self { |liste|
+                        @liste = liste
+                        @liste.selection_mode = :single
+                        @liste.signal_connect("row-activated") { |liste, ligne|
+                            app.utilisateur = Utilisateur::Utilisateur.
+                                chargerUtilisateur(ligne.children[0]) if(app)
+                            app.accueil
+                            self.close
+                        }
+                        Utilisateur::Utilisateur.comptesUtilisateurs.
+                            each { |nom|
+                            @liste.insert(Ligne.new(nom), -1)
+                        }
+                        @liste.show
+                    })
+                    sw.expand = true
+                    sw.show
+                    sw
+                }, {fill: true})
+                box.pack_end(Gtk::Button.new(
+                    label: "Nouvel utilisateur").yield_self { |bouton|
+                    bouton.signal_connect("clicked") {
+                        NouvelUtilisateurDialogue.new(self, app)
+                    }
+                    bouton.show
+                    bouton
+                })
+                box.expand = true
+                box.show
+                box
+            })
+            self.signal_connect("destroy") {
+                if(app.nil?) then
+                    Gtk.main_quit
+                elsif(app.utilisateur.nil?) then
+                    app.quit
+                end
             }
-            @liste.show
-            scrolled_window.add_with_viewport(@liste)
-            scrolled_window.expand = true
-            scrolled_window.show
-            box.pack_start(scrolled_window, {fill: true})
-            nouvel_utilisateur = Gtk::Button.new(label: "Nouvel utilisateur")
-            nouvel_utilisateur.signal_connect("clicked") { |bouton|
-                NouvelUtilisateurDialogue.new(self)
-            }
-            nouvel_utilisateur.show
-            box.pack_end(nouvel_utilisateur)
-            box.expand = true
-            box.show
-            self.content_area.add(box)
-            self.signal_connect("destroy") { Gtk.main_quit }
             self.show
         end
         

@@ -1,61 +1,96 @@
 require 'gtk3'
+require_relative 'BoutonRetour.rb'
 
 module Gui
 
     ##
     # Widget graphique représentant l'écran d'accueil.
-    class Accueil < Gtk::Window
+    class Accueil < Gtk::Box
+        
+        ## Barre de titre à utiliser avec cette box.
+        attr_reader :titlebar
         
         ##
         # Méthode permettant de créer l'écran d'accueil.
-        def Accueil.creer
-            fenetre = new
-            fenetre.set_title("Nurikabe")
-            box = Gtk::Box.new(:vertical, 10)
-            fenetre.add(box)
-            box.show
+        #
+        # Paramètres :
+        # [+app+]   Application (Nurikabe)
+        def initialize(app)
+            super(:vertical, 10)
+            
+            self.pack_start(Gtk::Button.new.yield_self { |bouton|
+                bouton.add(Gtk::Label.new.yield_self { |label|
+                    label.set_markup("<b>Tutoriel</b>")
+                    label.show
+                    label
+                })
+                bouton.margin_top = 100
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
+                bouton.signal_connect("clicked") { app.tutoriel }
+                bouton.show
+                bouton
+            }, :expand => true, :fill => true, :padding => 0)
 
-            tutorial = Gtk::Button.new
-            ltutorial = Gtk::Label.new
-            ltutorial.set_markup("<b>Tutorial</b>")
-            tutorial.add(ltutorial)
-            ltutorial.show
-            tutorial.signal_connect("clicked") {puts "Accès au tutorial"}
-            box.pack_start(tutorial, :expand => true, :fill => true, :padding => 0)
-            tutorial.show
+            self.pack_start(Gtk::Button.new.yield_self { |bouton|
+                bouton.add(Gtk::Label.new.yield_self { |label|
+                    label.set_markup("<b>Aventure</b>")
+                    label.show
+                    label
+                })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
+                bouton.signal_connect("clicked") { app.aventure }
+                bouton.show
+                bouton
+            }, :expand => true, :fill => true, :padding => 0)
 
-            aventure = Gtk::Button.new
-            laventure = Gtk::Label.new
-            laventure.set_markup("<b>Aventure</b>\n" +
-                                "<span weight=\"light\" style=\"italic\">Niveau #number\tCrédits : 5</span>")
-            aventure.add(laventure)
-            laventure.show
-            aventure.signal_connect("clicked") {puts "Accès à l'aventure"}
-            box.pack_start(aventure, :expand => true, :fill => true, :padding => 0)
-            aventure.show
+            self.pack_start(Gtk::Button.new.yield_self { |bouton|
+                bouton.add(Gtk::Label.new.yield_self { |label|
+                    label.set_markup("<b>Arcade</b>")
+                    label.show
+                    label
+                })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 10
+                bouton.margin_left = 100
+                bouton.margin_right = 100
+                bouton.signal_connect("clicked") { app.arcade }
+                bouton.show
+                bouton
+            }, :expand => true, :fill => true, :padding => 0)
 
-            arcade = Gtk::Button.new
-            larcade = Gtk::Label.new
-            larcade.set_markup("<b>Arcade</b>\n" +
-                              "<span weight=\"light\" style=\"italic\">#number terminés\tMoyenne : #temps</span>")
-            arcade.add(larcade)
-            larcade.show
-            arcade.signal_connect("clicked") {puts "Accès au mode arcade"}
-            box.pack_start(arcade, :expand => true, :fill => true, :padding => 0)
-            arcade.show
-
-            options = Gtk::Button.new
-            loptions = Gtk::Label.new
-            loptions.set_markup("<b>Options</b>")
-            options.add(loptions)
-            loptions.show
-            options.signal_connect("clicked") {puts "Accès aux options"}
-            box.pack_start(options, :expand => true, :fill => true, :padding => 0)
-            options.show
-
-            fenetre.show
-
-            return fenetre
+            self.pack_start(Gtk::Button.new.yield_self { |bouton|
+                bouton.add(Gtk::Label.new.yield_self { |label|
+                    label.set_markup("<b>Options</b>")
+                    label.show
+                    label
+                })
+                bouton.margin_top = 10
+                bouton.margin_bottom = 100
+                bouton.margin_left = 100
+                bouton.margin_right = 100
+                bouton.signal_connect("clicked") { app.options }
+                bouton.show
+                bouton
+            }, :expand => true, :fill => true, :padding => 0)
+            
+            self.show
+            
+            @titlebar = Gtk::HeaderBar.new.yield_self { |barre|
+                barre.title = "Nurikabe"
+                barre.subtitle = app.utilisateur.nom if(app.utilisateur)
+                barre.show_close_button = true
+                barre.pack_start(BoutonRetour.new.yield_self { |bouton|
+                    bouton.sensitive = false
+                    bouton
+                })
+                barre.show
+                barre
+            }
         end
     end
 

@@ -34,5 +34,5 @@ utilisateurs = []
 1.upto(8) { |i| 
     utilisateurs << DemoUtilisateur.new("Utilisateur #{i}", 10 * i)
 }
-selecteur = Gui::SelecteurUtilisateur.creer(nil, utilisateurs)
+selecteur = Gui::SelecteurUtilisateur.new(nil, utilisateurs)
 Gtk.main

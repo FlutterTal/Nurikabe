@@ -32,7 +32,7 @@ module Gui
             
             f.set_window_position(Gtk::WindowPosition::CENTER)
             
-            f.add(GGrille.creer(grille))
+            f.add(GGrille.new(grille))
             
             f.show
             
@@ -48,5 +48,5 @@ Gtk.init if Gtk.respond_to?(:init)
 	screen = Gdk::Display.default.default_screen
 	Gtk::StyleContext.add_provider_for_screen(screen, provider, 20000)
 	provider.load(path: "GUI/grille.css")
-    fenetre = Gui::DemoGrille.creer(GrilleJouable.creer(1))
+    fenetre = Gui::DemoGrille.creer(Grille::GrilleJouable.creer(1, "Arcade"))
 Gtk.main
