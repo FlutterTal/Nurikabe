@@ -22,7 +22,6 @@ module Grille
 
 
         attr_reader :taille_ligne, :taille_colonne, :numero, :grilleS, :mode
-        private_class_method :new
 
         def GrilleStatique.creer(unNumero, mode)
             new(unNumero, mode)
@@ -36,8 +35,8 @@ module Grille
             ligneGrille = Array.new
 
             @numero = unNumero
-
-            fichierGrille = File.new("Grilles/#{@mode}", "r+")
+            
+            fichierGrille = File.open("Grilles/#{@mode}", 'r')
             ligneFichier = fichierGrille.readlines[@numero-1]
             fichierGrille.close
 
@@ -46,6 +45,7 @@ module Grille
             @taille_colonne = grille[1].to_i
             grille.shift
             grille.shift
+
 
             grille.each { |ligne|
                 newLingne = ligne.split(//).each { |item|

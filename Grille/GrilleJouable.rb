@@ -23,7 +23,7 @@ module Grille
         #   @locErreur
 
 
-        attr_reader :erreur, :locErreur, :grille, :solution, :classement
+        attr_reader :erreur, :locErreur, :grille, :solution, :classement, :terminee
         private_class_method :new
 
         def GrilleJouable.creer(unNumero, mode)
@@ -53,6 +53,8 @@ module Grille
             @locErreur = Array.new()
             @erreur = nil
             @classement = Classement::Classement.Creer(@solution)
+
+            @terminee = false
             
         end
 
@@ -102,7 +104,10 @@ module Grille
         ##
         # Vérifie si la grille est terminée ou non
         def grilleTerminee?
-            return self.erreur == 0
+            if self.erreur == 0
+                self.terminee = true
+            end
+            return self.terminee
         end
 
         ##
@@ -123,6 +128,17 @@ module Grille
                     unUtilisateur.aventure = self.solution.numero
                 end
             end
+        end
+
+        def self.listeGrilles(mode)
+
+            liste =Array.new()
+            
+            5.times { |i| grille = GrilleJouable.creer(i, mode)
+                uneGrille = Array.new().push(grille, grille.solution.taille_ligne, grille.solution.taille_colonne)
+                liste.push(uneGrille)
+            }
+            return liste
         end
     end
 end
