@@ -1,67 +1,74 @@
 module Utilisateur
 
-  class Utilisateur
-    private_class_method :new
-    attr_reader :nom, :grilleAventure, :grilleArcade
-    attr_accessor :credit
-  
-    def Utilisateur.Creer(nom)
-      new(nom)
-    end
+	  ##
+	  # La classe Utilisateur correspond à la gestion des utilisateurs créés
+	  class Utilisateur
 
-    def initialize(nom)
-      fichier = File.open("UtilisateurJeu/#{nom}",'a+')
+			##
+			# Variables d'instances
+			#	@fichier
+			#	@nom
+			#	@credit
+			#	@aventure
+			#	@grilleArcade
 
-      @nom = nom
-      @credit = 0
-      @aventure = nil
-      @grilleArcade = Array.new()
+			private_class_method :new
+			attr_reader :nom, :grilleAventure, :grilleArcade
+			attr_accessor :credit
+		  
+			def Utilisateur.Creer(nom)
+			  	new(nom)
+			end
 
-      fichier.close
-    end
+			##
+    		# L'utilisateur est créé à partir de son nom est un fichier est créé pour lui afin de sauvegarder son avancement et son crédit
+			def initialize(nom)
+				fichier = File.open("UtilisateurJeu/#{nom}",'a+')
 
-    def self.verifNom(nom)
-      return File.exist?(nom)
-    end
+				@nom = nom
+				@credit = 0
+				@aventure = nil
+				@grilleArcade = Array.new()
 
-    def self.supprimerUtilisateur(nom)
-      File.delete(nom)
-    end
+				fichier.close
+			end
 
-    def self.comptesUtilisateurs()
-      return Dir.glob("UtilisateurJeu/*[^.rb]").sort.map { |chemin|
-        chemin.gsub(/^UtilisateurJeu\//, "")
-      }
-    end
+			##
+    		# Retourn vrai si un utilisateur à déjà le nom
+			def self.verifNom(nom)
+			  	return File.exist?(nom)
+			end
 
-    def sauvegarde
-      fichier = File.open("UtilisateurJeu/#{self.nom}",'w')
+			##
+    		# Supprime un utilisateur
+			def self.supprimerUtilisateur(nom)
+			  	File.delete(nom)
+			end
 
-      Marshal.dump(self, fichier)
-      fichier.close
-    end
+			##
+    		# Compte le nombre d'utilisateur enrengistrés
+			def self.comptesUtilisateurs()
+				return Dir.glob("UtilisateurJeu/*[^.rb]").sort.map { |chemin|
+					chemin.gsub(/^UtilisateurJeu\//, "")
+				}
+			end
 
-    def self.chargerUtilisateur(unUtilisateur)
-      fichier = File.open("UtilisateurJeu/#{unUtilisateur.nom}", 'r')
+			##
+    		# Permet de sauvegarder dans le fichier de l'utilisateur
+			def sauvegarde
+				fichier = File.open("UtilisateurJeu/#{self.nom}",'w')
 
-      return Marshal.load(fichier)
-    end
+				Marshal.dump(self, fichier)
+				fichier.close
+			end
 
-  # WAIT CLASSEMENT
-    def tempsMoyen()
-      @niveauTermine = 0
-      for n in (0..Grille.lenght)
-        if(@nom == Grille.utilisateur)
-          tempsMoyen += Grille.temps
-          @niveauTermine += 1
-        end
-      end
-      return @tempsMoyen/@niveauTermine
-    end
+			##
+    		# Permet de charger l'avancement de l'utilisateur à partir de son fichier
+			def self.chargerUtilisateur(unUtilisateur)
+				fichier = File.open("UtilisateurJeu/#{unUtilisateur.nom}", 'r')
 
-    def to_s()
-      "Pseudo : #{self.nom}Crédit :#{self.credit}\n"
-    end
+				return Marshal.load(fichier)
+			end
 
-  end
+	  end
 end

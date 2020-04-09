@@ -132,11 +132,10 @@ module Grille
 
         def self.listeGrilles(mode)
 
-            liste =Array.new()
+            liste=Array.new()
             
-            5.times { |i| grille = GrilleJouable.creer(i, mode)
-                uneGrille = Array.new().push(grille, grille.solution.taille_ligne, grille.solution.taille_colonne)
-                liste.push(uneGrille)
+            15.times { |i| grille = GrilleJouable.creer(i+1, mode)
+                liste.push(grille)
             }
             return liste
         end
