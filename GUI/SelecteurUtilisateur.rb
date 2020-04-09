@@ -24,22 +24,20 @@ module Gui
                 super(:horizontal)
                 @nom = nom
                 self.pack_start(Gtk::Image.new(
-                    icon_name: 'user', size: :dialog).yield_self { |icone|
+                    icon_name: 'user', size: :dialog).tap { |icone|
                     icone.pixel_size = 48
                     icone.margin_left = 4
                     icone.margin_right = 4
                     icone.margin_top = 4
                     icone.margin_bottom = 4
                     icone.show
-                    icone
                 })
-                self.pack_start(Gtk::Label.new.yield_self { |label|
+                self.pack_start(Gtk::Label.new.tap { |label|
                     label.margin_top = 4
                     label.margin_bottom = 4
                     label.margin_right = 4
                     label.markup = "<b>#{nom}</b>"
                     label.show
-                    label
                 })
                 self.show
             end
@@ -70,41 +68,36 @@ module Gui
                       flags: Gtk::DialogFlags::USE_HEADER_BAR |
                       Gtk::DialogFlags::MODAL |
                       Gtk::DialogFlags::DESTROY_WITH_PARENT)
-                champs = Gtk::Entry.new.yield_self { |champs|
+                champs = Gtk::Entry.new.tap { |champs|
                     champs.signal_connect("activate") {
                         self.signal_emit("response", CREER)
                     }
                     champs.show
-                    champs
                 }
                 self.content_area.add(
-                    Gtk::Box.new(:horizontal).yield_self { |box|
+                    Gtk::Box.new(:horizontal).tap { |box|
                     box.expand = true
                     box.pack_start(
                         Gtk::Image.new(icon_name: 'user',
-                                       size: :dialog).yield_self { |icone|
+                                       size: :dialog).tap { |icone|
                         icone.pixel_size = 64
                         icone.margin_left = 4
                         icone.margin_right = 4
                         icone.margin_top = 4
                         icone.margin_bottom = 4
                         icone.show
-                        icone
                     })
-                    box.add(Gtk::Box.new(:vertical).yield_self { |box2|
+                    box.add(Gtk::Box.new(:vertical).tap { |box2|
                         box2.expand = true
                         box2.pack_start(Gtk::Label.new(
-                            "Nom d'utilisateur :").yield_self { |label|
+                            "Nom d'utilisateur :").tap { |label|
                             label.xalign = 0
                             label.show
-                            label
                         })
                         box2.pack_start(champs)
                         box2.show
-                        box2
                     })
                     box.show
-                    box
                 })
                 self.add_button("Annuler", ANNULER)
                 self.add_button("Créer un utilisateur", CREER)
@@ -140,9 +133,9 @@ module Gui
             self.title = "Sélectionnez un utilisateur"
             self.default_width = 600
             self.default_height = 400
-            self.content_area.add(Gtk::Box.new(:vertical).yield_self { |box|
-                box.pack_start(Gtk::ScrolledWindow.new.yield_self { |sw|
-                    sw.add_with_viewport(Gtk::ListBox.new.yield_self { |liste|
+            self.content_area.add(Gtk::Box.new(:vertical).tap { |box|
+                box.pack_start(Gtk::ScrolledWindow.new.tap { |sw|
+                    sw.add_with_viewport(Gtk::ListBox.new.tap { |liste|
                         @liste = liste
                         @liste.selection_mode = :single
                         @liste.signal_connect("row-activated") { |liste, ligne|
@@ -159,19 +152,16 @@ module Gui
                     })
                     sw.expand = true
                     sw.show
-                    sw
                 }, {fill: true})
                 box.pack_end(Gtk::Button.new(
-                    label: "Nouvel utilisateur").yield_self { |bouton|
+                    label: "Nouvel utilisateur").tap { |bouton|
                     bouton.signal_connect("clicked") {
                         NouvelUtilisateurDialogue.new(self, app)
                     }
                     bouton.show
-                    bouton
                 })
                 box.expand = true
                 box.show
-                box
             })
             self.signal_connect("destroy") {
                 if(app.nil?) then
