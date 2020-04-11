@@ -6,29 +6,44 @@ module Gui
     ##
     # Widget graphique représentant une CaseJouable.
     class GCaseJouable < GCase
+    
+        public_class_method :new
         
         ##
         # Crée un widget graphique représentant une CaseJouable.
         #
         # Paramètre :
         # [+c+] CaseJouable
-        def GCaseJouable.creer(c)
-            gc = new
-            gc.case = c
-            gc.maj_etat
+        # [+historique+]    Historique
+        def initialize(c, historique)
+            super(c)
+            self.maj_etat
 
-            gc.signal_connect("clicked") { |gc|
-                case gc.case.etatCase
-                when :BLANC then gc.case.etatCase = :NOIR
-                when :NOIR then gc.case.etatCase = :MARK
-                when :MARK then gc.case.etatCase = :BLANC
-                else raise "État de la case (#{gc.case.ligne}, " +
-                        "#{gc.case.colonne}) inconnu : #{gc.case}"
+            self.signal_connect("clicked") {
+                case @case.etatCase
+                when :BLANC then
+                    if(historique) then
+                        @case.changementEtat(:NOIR, historique)
+                    else
+                        @case.etatCase = :NOIR
+                    end
+                when :NOIR then
+                    if(historique) then
+                        @case.changementEtat(:MARK, historique)
+                    else
+                        @case.etatCase = :MARK
+                    end
+                when :MARK then
+                    if(historique) then
+                        @case.changementEtat(:BLANC, historique)
+                    else
+                        @case.etatCase = :BLANC
+                    end
+                else raise "État de la case (#{@case.ligne}, " +
+                        "#{@case.colonne}) inconnu : #{@case}"
                 end
-                gc.maj_etat
+                self.maj_etat
             }
-                
-            return gc
         end
         
         ##

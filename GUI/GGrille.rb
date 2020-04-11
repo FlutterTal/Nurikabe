@@ -1,6 +1,7 @@
 require 'gtk3'
 require_relative '../Grille/CaseJouable.rb'
 require_relative '../Grille/CaseNumero.rb'
+require_relative '../Sauvegarde/Historique.rb'
 require_relative 'GCaseJouable.rb'
 require_relative 'GCaseNumero.rb'
 
@@ -9,22 +10,32 @@ module Gui
     ##
     # Widget graphique représentant une GrilleJouable.
     class GGrille < Gtk::Grid
+    
+        ## Historique de la grille
+        attr_reader :historique
         
         ##
-        # Crée un widget graphique représentant la grille donnée.
+        # Crée un widget graphique représentant la grille donnée pour
+        # l'utilisateur donné. L'historique est ouvert automatiquement.
         #
         # Paramètres :
-        # [+grille+]  Grille
-        def initialize(grille)
+        # [+grille+]        Grille
+        # [+utilisateur+]   Utilisateur
+        def initialize(grille, utilisateur = nil)
             super()
+            if(utilisateur) then
+                @historique = Sauvegarde::Historique.ouvrir(utilisateur, grille)
+            else
+                @historique = nil
+            end
             self.style_context.add_class("grille")
             grille.grille.grille.each { |ligne|
                 ligne.each { |c|
                     gc = nil
                     if(c.kind_of? Grille::CaseJouable) then
-                        gc = GCaseJouable.creer(c)
+                        gc = GCaseJouable.new(c, @historique)
                     elsif(c.kind_of? Grille::CaseNumero) then
-                        gc = GCaseNumero.creer(c)
+                        gc = GCaseNumero.new(c)
                     else
                         raise "Classe invalide pour la case #{c.class}"
                     end
