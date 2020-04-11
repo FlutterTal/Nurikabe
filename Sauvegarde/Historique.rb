@@ -56,6 +56,14 @@ module Sauvegarde
         end
 
         ##
+        # Ferme le fichier
+        #
+        # Nécessite de le réouvrir pour l'utiliser à nouveau
+        def fermer
+            @fichier.close
+        end
+
+        ##
         # Renvoie l'élément précédant l'élément courant
         #
         # Bloc optionel
