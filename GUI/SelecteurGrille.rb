@@ -18,9 +18,11 @@ module Gui
             #
             # Paramètres :
             # [+grille+]    Grille
-            def initialize(grille)
+            # [+app+]       Nurikabe
+            def initialize(grille, app)
                 super(:vertical)
                 self.pack_start(Gtk::Button.new.tap { |bouton|
+                    bouton.signal_connect("clicked") { app.grille(grille) }
                     bouton.add(Gtk::Label.new.tap { |label|
                         label.text = grille.solution.numero.to_s
                         label.show
@@ -52,7 +54,7 @@ module Gui
             super()
             self.add_with_viewport(Gtk::FlowBox.new.tap { |box|
                 Grille::GrilleJouable.listeGrilles(mode).each { |grille|
-                    box.add(BoutonGrille.new(grille))
+                    box.add(BoutonGrille.new(grille, app))
                 }
                 box.margin_top = 20
                 box.margin_bottom = 20
