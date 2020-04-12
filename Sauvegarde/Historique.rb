@@ -90,6 +90,12 @@ module Sauvegarde
         end
 
         ##
+        # vrai si l'historique est vide
+        def debut?
+            return @index == 0
+        end
+
+        ##
         # Execute le bloc du premier au dernier coup
         #
         # Donne en paramètre de bloc des HistoriqueElement
