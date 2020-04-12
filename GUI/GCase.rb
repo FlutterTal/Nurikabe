@@ -29,6 +29,12 @@ module Gui
             self.style_context.add_class("case")
             self.show
         end
+        
+        ##
+        # Met à jour la case (ne change rien par défaut).
+        def update
+            return self
+        end
 
     end
 

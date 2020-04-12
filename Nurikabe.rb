@@ -6,6 +6,7 @@ require_relative 'GUI/Fenetre.rb'
 require_relative 'GUI/SelecteurUtilisateur.rb'
 require_relative 'GUI/Accueil.rb'
 require_relative 'GUI/SelecteurGrille.rb'
+require_relative 'GUI/InterfaceJeu.rb'
 
 ##
 # Application
@@ -113,6 +114,11 @@ class Nurikabe < Gtk::Application
     def grille(grille)
         grille_deconnecter()
         @grille_actuelle = grille
+        interface = Gui::InterfaceJeu.new(self, grille)
+        @historique = interface.historique
+        @fenetre.remove(@fenetre.child) if(@fenetre.child)
+        @fenetre.child = interface
+        @fenetre.titlebar = interface.titlebar
     end
     
     ##

@@ -45,6 +45,13 @@ module Gui
             self.show
         end
         
+        ##
+        # Met à jour les cases de la grille.
+        def update
+            self.each { |c| c.update }
+            return self
+        end
+        
     end
 
 end

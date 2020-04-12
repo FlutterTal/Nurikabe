@@ -17,7 +17,7 @@ module Gui
         # [+historique+]    Historique
         def initialize(c, historique)
             super(c)
-            self.maj_etat
+            self.update
 
             self.signal_connect("clicked") {
                 case @case.etatCase
@@ -42,13 +42,13 @@ module Gui
                 else raise "État de la case (#{@case.ligne}, " +
                         "#{@case.colonne}) inconnu : #{@case}"
                 end
-                self.maj_etat
+                self.update
             }
         end
         
         ##
         # Met à jour l'état du widget selon l'état de la case.
-        def maj_etat
+        def update
             case @case.etatCase
             when :NOIR then marquer_noire
             when :BLANC then marquer_blanche

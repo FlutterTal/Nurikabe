@@ -67,8 +67,8 @@ module Gui
             })
             self.show
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
-                barre.title = "Grilles " + mode
-                barre.subtitle = app.utilisateur.nom
+                barre.title = "Nurikabe"
+                barre.subtitle = "Grilles " + mode
                 barre.show_close_button = true
                 barre.pack_start(BoutonRetour.new.tap { |bouton|
                     bouton.signal_connect("clicked") { app.accueil }
