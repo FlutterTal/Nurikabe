@@ -52,6 +52,15 @@ module Gui
             return self
         end
         
+        ##
+        # Le bloc donné sera exécuté lorsque la grille sera mise à jour.
+        #
+        # Les blocs n'ont aucun paramètre.
+        def on_update(&bloc)
+            self.each { |c| c.on_update(&bloc) }
+            return self
+        end
+        
     end
 
 end

@@ -54,6 +54,7 @@ module Gui
             when :BLANC then marquer_blanche
             when :MARK then marquer_point
             end
+            notifier()
             return self
         end
         

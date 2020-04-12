@@ -48,8 +48,10 @@ module Gui
                             element.case_jeu.changementEtat(element.etat_avant,
                                                             @historique)
                         }
+                        annuler.sensitive = !@historique.debut?
                         refaire.sensitive = !@historique.fin?
                     }
+                    annuler.sensitive = !@historique.debut?
                     annuler.show
                 })
                 barre.pack_start(refaire.tap { |refaire|
@@ -58,11 +60,16 @@ module Gui
                             element.case_jeu.changementEtat(element.etat_apres,
                                                             @historique)
                         }
+                        annuler.sensitive = !@historique.debut?
                         refaire.sensitive = !@historique.fin?
                     }
                     refaire.sensitive = !@historique.fin?
                     refaire.show
                 })
+                gg.on_update {
+                    annuler.sensitive = !@historique.debut?
+                    refaire.sensitive = !@historique.fin?
+                }
                 barre.pack_end(Gtk::MenuButton.new.tap { |bouton|
                     bouton.image = Gtk::Image.new(
                         icon_name: 'open-menu-symbolic')

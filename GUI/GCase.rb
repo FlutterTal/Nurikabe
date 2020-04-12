@@ -7,6 +7,8 @@ module Gui
     #
     # Classe de base des classes GCaseJouable et GCaseNumero.
     class GCase < Gtk::Button
+        
+        # @procs => Array de Proc
 
         ## Taille d'un côté d'une case (Integer)
         TAILLE = 64
@@ -23,6 +25,7 @@ module Gui
         # [+c+] Case
         def initialize(c)
             super()
+            @procs = []
             @case = c
             self.width_request = TAILLE
             self.height_request = TAILLE
@@ -33,6 +36,24 @@ module Gui
         ##
         # Met à jour la case (ne change rien par défaut).
         def update
+            return self
+        end
+        
+        ##
+        # Le bloc donné sera exécuté lorsque la case sera mise à jour.
+        #
+        # Les blocs n'ont aucun paramètre.
+        def on_update(&bloc)
+            @procs << bloc
+            return self
+        end
+        
+        protected
+        
+        ##
+        # Exécute tous les blocs inscrits.
+        def notifier
+            @procs.each { |pr| pr.call }
             return self
         end
 

@@ -1,3 +1,5 @@
+require_relative 'HistoriqueElement.rb'
+
 module Sauvegarde
     ##
     # Un historique de partie
@@ -49,7 +51,7 @@ module Sauvegarde
                 @historique.slice!(@index..@historique.size)
                 @index = @historique.size
             end
-            @historique[@index] = HistoriqueElement.Creer(@grille, case_jeu, etat_avant, etat_apres)
+            @historique[@index] = HistoriqueElement.creer(@grille, case_jeu, etat_avant, etat_apres)
             @index += 1
             @fichier.pwrite(Marshal.dump(@historique),0)
             return self
