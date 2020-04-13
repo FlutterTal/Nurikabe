@@ -62,6 +62,11 @@ module Sauvegarde
         #
         # Nécessite de le réouvrir pour l'utiliser à nouveau
         def fermer
+            unless fin?
+                @historique.slice!(@index..@historique.size)
+                @index = @historique.size
+            end
+            @fichier.pwrite(Marshal.dump(@historique),0)
             @fichier.close
         end
 
@@ -102,9 +107,10 @@ module Sauvegarde
         #
         # Donne en paramètre de bloc des HistoriqueElement
         def replay
-            i -= 1
-            until i == @index
-                yield suivant
+            @index = 0
+            until self.fin?
+                yield @historique[@index]
+                @index += 1
             end
             return self
         end
