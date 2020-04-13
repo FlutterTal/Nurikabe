@@ -45,8 +45,7 @@ module Gui
                 barre.pack_start(annuler.tap { |annuler|
                     annuler.signal_connect("clicked") {
                         @historique.precedent { |element|
-                            element.case_jeu.changementEtat(element.etat_avant,
-                                                            @historique)
+                            element.case_jeu.etatCase = element.etat_avant
                         }
                         gg.update
                     }
@@ -56,8 +55,7 @@ module Gui
                 barre.pack_start(refaire.tap { |refaire|
                     refaire.signal_connect("clicked") {
                         @historique.suivant { |element|
-                            element.case_jeu.changementEtat(element.etat_apres,
-                                                            @historique)
+                            element.case_jeu.etatCase = element.etat_apres
                         }
                         gg.update
                     }

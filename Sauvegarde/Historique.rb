@@ -81,8 +81,8 @@ module Sauvegarde
         # Bloc optionel
         def suivant
             @index += 1
-            yield @historique[@index] if block_given?
-            return @historique[@index]
+            yield @historique[@index - 1] if block_given?
+            return @historique[@index - 1]
         end
 
         ##
