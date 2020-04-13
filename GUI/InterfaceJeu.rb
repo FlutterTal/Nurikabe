@@ -48,8 +48,7 @@ module Gui
                             element.case_jeu.changementEtat(element.etat_avant,
                                                             @historique)
                         }
-                        annuler.sensitive = !@historique.debut?
-                        refaire.sensitive = !@historique.fin?
+                        gg.update
                     }
                     annuler.sensitive = !@historique.debut?
                     annuler.show
@@ -60,8 +59,7 @@ module Gui
                             element.case_jeu.changementEtat(element.etat_apres,
                                                             @historique)
                         }
-                        annuler.sensitive = !@historique.debut?
-                        refaire.sensitive = !@historique.fin?
+                        gg.update
                     }
                     refaire.sensitive = !@historique.fin?
                     refaire.show
