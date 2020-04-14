@@ -45,7 +45,9 @@ module Gui
                 barre.pack_start(annuler.tap { |annuler|
                     annuler.signal_connect("clicked") {
                         @historique.precedent { |element|
-                            grille.grille.grille[element.case_jeu.ligne][element.case_jeu.colonne].etatCase = element.etat_avant
+                            grille.grille.grille[element.case_jeu.ligne
+                                ][element.case_jeu.colonne].etatCase =
+                                element.etat_avant
                         }
                         gg.update
                     }
@@ -55,36 +57,68 @@ module Gui
                 barre.pack_start(refaire.tap { |refaire|
                     refaire.signal_connect("clicked") {
                         @historique.suivant { |element|
-                            grille.grille.grille[element.case_jeu.ligne][element.case_jeu.colonne].etatCase = element.etat_apres
+                            grille.grille.grille[element.case_jeu.ligne
+                                ][element.case_jeu.colonne].etatCase =
+                                element.etat_apres
                         }
                         gg.update
                     }
                     refaire.sensitive = !@historique.fin?
                     refaire.show
                 })
-                gg.on_update {
-                    annuler.sensitive = !@historique.debut?
-                    refaire.sensitive = !@historique.fin?
-                }
                 barre.pack_end(Gtk::MenuButton.new.tap { |bouton|
                     bouton.image = Gtk::Image.new(
                         icon_name: 'open-menu-symbolic')
                     bouton.show
                 })
-                barre.pack_end(
-                    Gtk::Button.new(icon_name: 'checkmark').tap { |bouton|
+                verifier = Gtk::Button.new(icon_name: 'checkmark')
+                barre.pack_end(verifier.tap { |verifier|
+                    verifier.show
+                })
+                aide_btn = Gtk::Button.new(label: "Aide",
+                                           icon_name: 'help-contextual')
+                barre.pack_end(aide_btn.tap { |bouton|
                     bouton.show
                 })
-                barre.pack_end(
-                    Gtk::Button.new(label: "Aide",
-                                    icon_name: 'help-contextual').tap { |bouton|
-                    bouton.show
-                })
+                
+                boite_terminee_affichee = false
+                gg.on_update {
+                    grille.verifErreur
+                    if(grille.grilleTerminee?) then
+                        gg.desactiver
+                        annuler.sensitive = false
+                        refaire.sensitive = false
+                        aide_btn.sensitive = false
+                        verifier.sensitive = false
+                        unless(boite_terminee_affichee) then
+                            Gtk::MessageDialog.new(
+                                title: "Gagné",
+                                parent: app.fenetre,
+                                flags: Gtk::DialogFlags::USE_HEADER_BAR |
+                                Gtk::DialogFlags::MODAL |
+                                Gtk::DialogFlags::DESTROY_WITH_PARENT,
+                                message: "Vous avez terminé la grille"
+                            ).tap { |boite|
+                                boite.signal_connect("response") {
+                                    boite.close
+                                }
+                                boite.show
+                            }
+                            boite_terminee_affichee = true
+                        end
+                    else
+                        annuler.sensitive = !@historique.debut?
+                        refaire.sensitive = !@historique.fin?
+                    end
+                }
+                
+                
                 barre.show
             }
             
             @historique.replay { |element|
-                grille.grille.grille[element.case_jeu.ligne][element.case_jeu.colonne].etatCase = element.etat_apres
+                grille.grille.grille[element.case_jeu.ligne
+                    ][element.case_jeu.colonne].etatCase = element.etat_apres
             }
             gg.update
             

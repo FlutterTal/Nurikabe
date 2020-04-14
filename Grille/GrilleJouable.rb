@@ -1,5 +1,7 @@
 require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
+require_relative 'CaseNumero.rb'
+require_relative 'CaseJouable.rb'
 
 require_relative '../Utilisateur/Utilisateur.rb'
 require_relative '../Sauvegarde/Historique.rb'
@@ -104,9 +106,21 @@ module Grille
         ##
         # Vérifie si la grille est terminée ou non
         def grilleTerminee?
-            if self.erreur == 0
-                self.terminee = true
-            end
+            @terminee = @grille.grille.all? { |ligne|
+                ligne.all? { |c|
+                    if(c.kind_of? CaseNumero) then
+                        true
+                    elsif(@solution.grilleS.grille[c.ligne][c.colonne].
+                          etatCase == :BLANC) then
+                        [:BLANC, :MARK].include? c.etatCase
+                    elsif(@solution.grilleS.grille[c.ligne][c.colonne].
+                          etatCase == :NOIR) then
+                        c.etatCase == :NOIR
+                    else
+                        false
+                    end
+                }
+            }
             return self.terminee
         end
 

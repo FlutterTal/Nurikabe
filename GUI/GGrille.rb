@@ -61,6 +61,13 @@ module Gui
             return self
         end
         
+        ##
+        # Désactive toutes les cases.
+        def desactiver
+            self.each { |c| c.sensitive = false }
+            return self
+        end
+        
     end
 
 end
