@@ -7,23 +7,54 @@ module Gui
     #
     # Classe de base des classes GCaseJouable et GCaseNumero.
     class GCase < Gtk::Button
+        
+        # @procs => Array de Proc
 
         ## Taille d'un côté d'une case (Integer)
         TAILLE = 64
         
         ## Case représentée par le widget
-        attr_accessor :case
+        attr_reader :case
         
         private_class_method :new
         
         ##
         # Initialise un widget graphique représentant une case.
-        def initialize
-            super
+        #
+        # Paramètre :
+        # [+c+] Case
+        def initialize(c)
+            super()
+            @procs = []
+            @case = c
             self.width_request = TAILLE
             self.height_request = TAILLE
             self.style_context.add_class("case")
             self.show
+        end
+        
+        ##
+        # Met à jour la case (ne change rien par défaut).
+        def update
+            return self
+        end
+        
+        ##
+        # Le bloc donné sera exécuté lorsque la case sera mise à jour.
+        #
+        # Les blocs n'ont aucun paramètre.
+        def on_update(&bloc)
+            @procs << bloc
+            return self
+        end
+        
+        protected
+        
+        ##
+        # Exécute tous les blocs inscrits.
+        def notifier
+            @procs.each { |pr| pr.call }
+            return self
         end
 
     end

@@ -1,3 +1,5 @@
+require_relative 'HistoriqueElement.rb'
+
 module Sauvegarde
     ##
     # Un historique de partie
@@ -49,10 +51,23 @@ module Sauvegarde
                 @historique.slice!(@index..@historique.size)
                 @index = @historique.size
             end
-            @historique[@index] = HistoriqueElement.Creer(@grille, case_jeu, etat_avant, etat_apres)
+            @historique[@index] = HistoriqueElement.creer(@grille, case_jeu, etat_avant, etat_apres)
             @index += 1
             @fichier.pwrite(Marshal.dump(@historique),0)
             return self
+        end
+
+        ##
+        # Ferme le fichier
+        #
+        # Nécessite de le réouvrir pour l'utiliser à nouveau
+        def fermer
+            unless fin?
+                @historique.slice!(@index..@historique.size)
+                @index = @historique.size
+            end
+            @fichier.pwrite(Marshal.dump(@historique),0)
+            @fichier.close
         end
 
         ##
@@ -71,8 +86,8 @@ module Sauvegarde
         # Bloc optionel
         def suivant
             @index += 1
-            yield @historique[@index] if block_given?
-            return @historique[@index]
+            yield @historique[@index - 1] if block_given?
+            return @historique[@index - 1]
         end
 
         ##
@@ -82,13 +97,20 @@ module Sauvegarde
         end
 
         ##
+        # vrai si l'historique est vide
+        def debut?
+            return @index == 0
+        end
+
+        ##
         # Execute le bloc du premier au dernier coup
         #
         # Donne en paramètre de bloc des HistoriqueElement
         def replay
-            i -= 1
-            until i == @index
-                yield suivant
+            @index = 0
+            until self.fin?
+                yield @historique[@index]
+                @index += 1
             end
             return self
         end

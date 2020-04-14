@@ -61,3 +61,7 @@ build-iPhoneSimulator/
 # Utilisateurs
 
 /UtilisateurJeu/
+
+# Historiques
+
+Hist_*

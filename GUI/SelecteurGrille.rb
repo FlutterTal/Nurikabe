@@ -1,5 +1,6 @@
 require 'gtk3'
 require_relative 'BoutonRetour.rb'
+require_relative '../Grille/GrilleJouable.rb'
 
 module Gui
     
@@ -14,11 +15,16 @@ module Gui
             
             ##
             # Crée un bouton pour la grille donnée.
-            def initialize(numero)
+            #
+            # Paramètres :
+            # [+grille+]    Grille
+            # [+app+]       Nurikabe
+            def initialize(grille, app)
                 super(:vertical)
                 self.pack_start(Gtk::Button.new.tap { |bouton|
+                    bouton.signal_connect("clicked") { app.grille(grille) }
                     bouton.add(Gtk::Label.new.tap { |label|
-                        label.text = numero.to_s
+                        label.text = grille.solution.numero.to_s
                         label.show
                     })
                     bouton.width_request = 64
@@ -26,7 +32,8 @@ module Gui
                     bouton.show
                 })
                 self.pack_start(Gtk::Label.new.tap { |label|
-                    label.text = "6x7"
+                    label.text = "#{grille.solution.taille_ligne}" +
+                        "x#{grille.solution.taille_colonne}"
                     label.show
                 })
                 self.show
@@ -45,15 +52,23 @@ module Gui
         # [+mode+]  Mode de jeu (String)
         def initialize(app, mode)
             super()
-            self.add(Gtk::FlowBox.new.tap { |box|
-                1.upto(5) { |i| box.add(BoutonGrille.new(i)) }
-#                 box.selection_mode = :none
+            self.add_with_viewport(Gtk::FlowBox.new.tap { |box|
+                Grille::GrilleJouable.listeGrilles(mode).each { |grille|
+                    box.add(BoutonGrille.new(grille, app))
+                }
+                box.margin_top = 20
+                box.margin_bottom = 20
+                box.margin_left = 20
+                box.margin_right = 20
+                box.row_spacing = 20
+                box.column_spacing = 20
+                box.selection_mode = :none
                 box.show
             })
             self.show
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
-                barre.title = "Grilles " + mode
-                barre.subtitle = app.utilisateur.nom
+                barre.title = "Nurikabe"
+                barre.subtitle = "Grilles " + mode
                 barre.show_close_button = true
                 barre.pack_start(BoutonRetour.new.tap { |bouton|
                     bouton.signal_connect("clicked") { app.accueil }

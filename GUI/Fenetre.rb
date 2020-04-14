@@ -21,7 +21,10 @@ module Gui
                 barre_titre.show_close_button = true
                 barre_titre.show
             }
-            self.signal_connect("destroy") { app.quit }
+            self.signal_connect("destroy") {
+                app.grille_deconnecter
+                app.quit
+            }
             self.show
         end
         

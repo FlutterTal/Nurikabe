@@ -6,6 +6,7 @@ require_relative 'GUI/Fenetre.rb'
 require_relative 'GUI/SelecteurUtilisateur.rb'
 require_relative 'GUI/Accueil.rb'
 require_relative 'GUI/SelecteurGrille.rb'
+require_relative 'GUI/InterfaceJeu.rb'
 
 ##
 # Application
@@ -16,7 +17,9 @@ class Nurikabe < Gtk::Application
     # Application
     @@app = nil
     
-    # @fenetre  => Fenêtre principale de l'application
+    # @fenetre          => Fenêtre principale de l'application
+    # @grille_actuelle  => GrilleJouable actuelle
+    # @historique       => Historique de la grille actuelle
 
     ##
     # Retourne l'application.
@@ -67,6 +70,7 @@ class Nurikabe < Gtk::Application
     ##
     # Affiche l'accueil
     def accueil
+        grille_deconnecter()
         accueil = Gui::Accueil.new(self)
         @fenetre.remove(@fenetre.child) if(@fenetre.child)
         @fenetre.child = accueil
@@ -77,25 +81,54 @@ class Nurikabe < Gtk::Application
     ##
     # Affiche la section _Tutoriel_.
     def tutoriel
+        grille_deconnecter()
         puts "Tutoriel"
     end
     
     ##
     # Affiche la liste des grilles aventures.
     def aventure
+        grille_deconnecter()
         return selecteur_grilles("Aventure")
     end
     
     ##
     # Affiche la liste des grilles arcades.
     def arcade
+        grille_deconnecter()
         return selecteur_grilles("Arcade")
     end
     
     ##
     # Affiche les options.
     def options
+        grille_deconnecter()
         puts "Options"
+    end
+    
+    ##
+    # Affiche une grille de jeu.
+    #
+    # Paramètres :
+    # [+grille+]    \Grille de jeu (GrilleJouable)
+    def grille(grille)
+        grille_deconnecter()
+        @grille_actuelle = grille
+        interface = Gui::InterfaceJeu.new(self, grille)
+        @historique = interface.historique
+        @fenetre.remove(@fenetre.child) if(@fenetre.child)
+        @fenetre.child = interface
+        @fenetre.titlebar = interface.titlebar
+    end
+    
+    ##
+    # Sauvegarde la grille actuelle et met +grille_actuelle+ à +nil+.
+    def grille_deconnecter
+        if(@grille_actuelle) then
+            @historique.fermer
+            @historique = nil
+            @grille_actuelle = nil
+        end
     end
     
     private
