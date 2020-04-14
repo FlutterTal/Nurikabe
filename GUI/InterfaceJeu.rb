@@ -24,7 +24,9 @@ module Gui
             super(:vertical)
             
             gg = GGrille.new(grille, app.utilisateur)
-            self.pack_start(gg)
+            gg.valign = Gtk::Align::CENTER
+            gg.halign = Gtk::Align::CENTER
+            self.pack_end(gg)
             @historique = gg.historique
             
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
@@ -73,12 +75,34 @@ module Gui
                 })
                 verifier = Gtk::Button.new(icon_name: 'checkmark')
                 barre.pack_end(verifier.tap { |verifier|
+                    verifier.signal_connect("clicked") {
+                        self.pack_start(Gtk::InfoBar.new.tap { |info|
+                            info.content_area.add(Gtk::Label.new.tap { |label|
+                                if(grille.erreur == 0) then
+                                    label.markup = "<b>Aucune erreur</b>"
+                                else
+                                    label.markup = "<b>#{label.markup} erreur" +
+                                        (grille.erreur > 1 ? 's' : '') + "</b>"
+                                end
+                                label.show
+                            })
+                            info.show_close_button = true
+                            info.signal_connect("response") { |info, reponse|
+                                case reponse
+                                when Gtk::ResponseType::CLOSE then
+                                    self.remove(info)
+                                end
+                            }
+                            info.show
+                        })
+                    }
                     verifier.show
                 })
                 aide_btn = Gtk::Button.new(label: "Aide",
                                            icon_name: 'help-contextual')
-                barre.pack_end(aide_btn.tap { |bouton|
-                    bouton.show
+                barre.pack_end(aide_btn.tap { |aide_btn|
+                    aide_btn.always_show_image = true
+                    aide_btn.show
                 })
                 
                 boite_terminee_affichee = false

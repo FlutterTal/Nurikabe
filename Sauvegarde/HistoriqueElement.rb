@@ -34,7 +34,7 @@ module Sauvegarde
             @case_jeu = case_jeu
             @etat_avant = etat_avant
             @etat_apres = etat_apres
-            @erreur = !grille.verifCase(case_jeu)
+            @erreur = !grille.verifCase(case_jeu, false)
         end
 
 
