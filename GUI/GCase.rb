@@ -57,6 +57,18 @@ module Gui
             return self
         end
         
+        ##
+        # Met la case en surbrillance si +bool+ est à +true+, enlève l'effet
+        # sinon.
+        def aide=(bool)
+            if(bool) then
+                self.style_context.add_class("case_indice")
+            else
+                self.style_context.remove_class("case_indice")
+            end
+            return self
+        end
+        
         protected
         
         ##

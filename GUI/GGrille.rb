@@ -80,6 +80,19 @@ module Gui
             return self
         end
         
+        ##
+        # Met en surbrillance la case de coordonnées données.
+        #
+        # Paramètres :
+        # [+x+] Coordonnée horizontale
+        # [+y+] Coordonnée verticale
+        def aide(x, y)
+            self.each { |c|
+                c.aide = c.case.ligne == x && c.case.colonne == y
+            }
+            return self
+        end
+        
     end
 
 end

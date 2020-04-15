@@ -1,6 +1,7 @@
 require 'gtk3'
 require_relative 'GGrille.rb'
 require_relative 'BoutonRetour.rb'
+require_relative '../Aide/Aide.rb'
 
 module Gui
     
@@ -99,6 +100,7 @@ module Gui
                                 if(reponse == 1) then
                                     gg.erreurs = grille.locErreur
                                 end
+                                @infobar = nil
                                 self.remove(info)
                             }
                             info.show
@@ -110,6 +112,54 @@ module Gui
                                            icon_name: 'help-contextual')
                 barre.pack_end(aide_btn.tap { |aide_btn|
                     aide_btn.always_show_image = true
+                    aide_btn.signal_connect("clicked") { |aide_btn|
+                        aide_btn.sensitive = false
+                        aide_tab = []
+                        Aide.detecter(grille, aide_tab)
+                        if(aide_tab.length == 0) then
+                            infobar(Gtk::InfoBar.new.tap { |info|
+                                info.content_area.add(
+                                    Gtk::Label.new.tap { |label|
+                                    label.markup = "<b>Aucune situation " +
+                                        "détectée</b>"
+                                    label.show
+                                })
+                                info.show_close_button = true
+                                info.signal_connect("response") {
+                                    @infobar = nil
+                                    self.remove(info)
+                                    aide_btn.sensitive = true
+                                }
+                                info.show
+                            })
+                        else
+                            aide = aide_tab[rand(aide_tab.length)]
+                            gg.aide(aide.caseC.ligne, aide.caseC.colonne)
+                            infobar(Gtk::InfoBar.new.tap { |info|
+                                label = Gtk::Label.new
+                                info.content_area.add(label.tap { |label|
+                                    label.markup = "<b>Une aide " +
+                                        "disponnible</b>"
+                                    label.show
+                                })
+                                info.show_close_button = true
+                                info.add_button("Détails", 1)
+                                info.signal_connect("response") { |info, rep|
+                                    case rep
+                                    when 1 then
+                                        label.markup = "<b>Une aide " +
+                                            "disponnible</b>\n#{aide.chaine}"
+                                    when Gtk::ResponseType::CLOSE then
+                                        @infobar = nil
+                                        self.remove(info)
+                                        gg.aide(-1, -1)
+                                        aide_btn.sensitive = true
+                                    end
+                                }
+                                info.show
+                            })
+                        end
+                    }
                     aide_btn.show
                 })
                 
@@ -162,7 +212,9 @@ module Gui
         
         # Change la barre d'info
         def infobar(barre)
-            self.remove(@infobar) if(@infobar)
+            if(@infobar) then
+                @infobar.signal_emit("response", Gtk::ResponseType::CLOSE)
+            end
             @infobar = barre
             self.pack_start(barre)
         end

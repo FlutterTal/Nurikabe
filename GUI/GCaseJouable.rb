@@ -55,18 +55,8 @@ module Gui
             when :MARK then marquer_point
             end
             self.style_context.remove_class("case_erreur")
+            self.style_context.remove_class("case_indice")
             notifier()
-            return self
-        end
-        
-        ##
-        # Détermine s'il faut afficher les erreurs, ou non.
-        #
-        # Paramètres :
-        # [+bool+]  Booléen
-        def afficher_erreurs=(bool)
-            super(bool)
-            self.update()
             return self
         end
         
