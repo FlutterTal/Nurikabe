@@ -13,8 +13,8 @@ module Utilisateur
 			#	@grilleArcade
 
 			private_class_method :new
-			attr_reader :nom, :grilleAventure, :grilleArcade
-			attr_accessor :credit
+			attr_reader :nom, :grilleArcade
+			attr_accessor :credit, :aventure
 		  
 			def Utilisateur.Creer(nom)
 			  	new(nom)
@@ -27,7 +27,7 @@ module Utilisateur
 
 				@nom = nom
 				@credit = 0
-				@aventure = nil
+				@aventure = 0
 				@grilleArcade = Array.new()
 
 				fichier.close

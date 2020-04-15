@@ -239,7 +239,16 @@ module Gui
                         refaire.sensitive = false
                         aide_btn.sensitive = false
                         verifier.sensitive = false
-                        unless(boite_terminee_affichee) then
+                        unless(grille.solution.mode == "Arcade" &&
+                            app.utilisateur.grilleArcade.include?(
+                            grille.solution.numero) ||
+                            grille.solution.mode == "Aventure" &&
+                            app.utilisateur.aventure >=
+                            grille.solution.numero ||
+                            boite_terminee_affichee) then
+                            grille.grilleTerminee(app.utilisateur)
+                            app.utilisateur.credit += CREDIT_VICTOIRE
+                            update_titlebar()
                             Gtk::MessageDialog.new(
                                 title: "Gagné",
                                 parent: app.fenetre,
