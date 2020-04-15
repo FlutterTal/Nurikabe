@@ -3,6 +3,15 @@ Projet Génie Logiciel 2.
 
 Groupe 1
 
+- AMIARD Anthony
+- AMBROISE Taliesin
+- BIARD Sunny
+- BOUTHEMY Thomas
+- CHAMPION Nicolas
+- EDEL Thomas
+- VAIDIE Florent
+
+
 ## Pour travailler sur le dépôt
 
 ### Mise en place initiale
