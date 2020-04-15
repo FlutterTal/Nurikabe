@@ -7,6 +7,8 @@ module Gui
     ##
     # Interface de jeu contenant une GGrille.
     class InterfaceJeu < Gtk::Box
+    
+        # @infobar  => Barre d'info actuelle
         
         ## Barre de titre associée à l'interface de jeu.
         attr_reader :titlebar
@@ -76,22 +78,28 @@ module Gui
                 verifier = Gtk::Button.new(icon_name: 'checkmark')
                 barre.pack_end(verifier.tap { |verifier|
                     verifier.signal_connect("clicked") {
-                        self.pack_start(Gtk::InfoBar.new.tap { |info|
+                        infobar(Gtk::InfoBar.new.tap { |info|
                             info.content_area.add(Gtk::Label.new.tap { |label|
                                 if(grille.erreur == 0) then
                                     label.markup = "<b>Aucune erreur</b>"
                                 else
-                                    label.markup = "<b>#{label.markup} erreur" +
+                                    label.markup = "<b>#{grille.erreur} " +
+                                        "erreur" +
                                         (grille.erreur > 1 ? 's' : '') + "</b>"
                                 end
                                 label.show
                             })
+                            if(grille.erreur == 1) then
+                                info.add_button("Afficher la case", 1)
+                            elsif(grille.erreur > 1) then
+                                info.add_button("Afficher les cases", 1)
+                            end
                             info.show_close_button = true
                             info.signal_connect("response") { |info, reponse|
-                                case reponse
-                                when Gtk::ResponseType::CLOSE then
-                                    self.remove(info)
+                                if(reponse == 1) then
+                                    gg.erreurs = grille.locErreur
                                 end
+                                self.remove(info)
                             }
                             info.show
                         })
@@ -106,6 +114,7 @@ module Gui
                 })
                 
                 boite_terminee_affichee = false
+                
                 gg.on_update {
                     grille.verifErreur
                     if(grille.grilleTerminee?) then
@@ -147,6 +156,15 @@ module Gui
             gg.update
             
             self.show
+        end
+        
+        private
+        
+        # Change la barre d'info
+        def infobar(barre)
+            self.remove(@infobar) if(@infobar)
+            @infobar = barre
+            self.pack_start(barre)
         end
         
     end

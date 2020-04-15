@@ -68,6 +68,18 @@ module Gui
             return self
         end
         
+        ##
+        # Affiche les erreurs données.
+        #
+        # Paramètres :
+        # [+erreurs+]   Array de [ligne, colonne]
+        def erreurs=(erreurs)
+            self.each { |c|
+                c.erreur = erreurs.include? [c.case.ligne, c.case.colonne]
+            }
+            return self
+        end
+        
     end
 
 end

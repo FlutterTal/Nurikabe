@@ -48,6 +48,15 @@ module Gui
             return self
         end
         
+        ##
+        # Détermine si la case a une erreur.
+        #
+        # Paramètres :
+        # [+bool+]  Booléen
+        def erreur=(bool)
+            return self
+        end
+        
         protected
         
         ##
