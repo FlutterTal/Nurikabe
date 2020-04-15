@@ -71,6 +71,7 @@ module Gui
             gg = GGrille.new(grille, app.utilisateur)
             gg.valign = Gtk::Align::CENTER
             gg.halign = Gtk::Align::CENTER
+            gg.expand = true
             self.pack_end(gg)
             @historique = gg.historique
             
@@ -203,7 +204,7 @@ module Gui
                                 infobar(Gtk::InfoBar.new.tap { |info|
                                     label = Gtk::Label.new
                                     info.content_area.add(label.tap { |label|
-                                        label.markup = "<b>Une aide disponnible</b>"
+                                        label.markup = "<b>Une aide disponible</b>"
                                         label.show
                                     })
                                     info.show_close_button = true

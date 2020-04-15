@@ -7,6 +7,7 @@ require_relative 'GUI/SelecteurUtilisateur.rb'
 require_relative 'GUI/Accueil.rb'
 require_relative 'GUI/SelecteurGrille.rb'
 require_relative 'GUI/InterfaceJeu.rb'
+require_relative 'GUI/Options.rb'
 
 ##
 # Application
@@ -105,7 +106,11 @@ class Nurikabe < Gtk::Application
     # Affiche les options.
     def options
         grille_deconnecter()
-        puts "Options"
+        options = Gui::Options.new(self)
+        @fenetre.remove(@fenetre.child) if(@fenetre.child)
+        @fenetre.child = options
+        @fenetre.titlebar = options.titlebar
+        return self
     end
     
     ##
