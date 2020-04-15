@@ -46,6 +46,9 @@ module Gui
         ## Coût d'une aide
         CREDIT_AIDE = 4
         
+        ## Gain d'une victoire
+        CREDIT_VICTOIRE = 10
+        
         ##
         # Crée une interface de jeu pour la grille donnée.
         #
@@ -54,6 +57,8 @@ module Gui
         # [+grille+]    GrilleJouable
         def initialize(app, grille)
             super(:vertical)
+            @grille = grille
+            @app = app
             
             gg = GGrille.new(grille, app.utilisateur)
             gg.valign = Gtk::Align::CENTER
@@ -63,7 +68,6 @@ module Gui
             
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
                 barre.title = "Nurikabe"
-                barre.subtitle = "Niveau #{grille.solution.numero}"
                 barre.show_close_button = true
                 barre.pack_start(BoutonRetour.new.tap { |bouton|
                     bouton.signal_connect("clicked") {
@@ -139,6 +143,7 @@ module Gui
                                             gg.erreurs = grille.locErreur
                                             app.utilisateur.credit -=
                                                 CREDIT_VERIF
+                                            update_titlebar()
                                         end
                                     end
                                     @infobar = nil
@@ -147,6 +152,7 @@ module Gui
                                 info.show
                             })
                             app.utilisateur.credit -= CREDIT_VERIF
+                            update_titlebar()
                         end
                     }
                     verifier.show
@@ -156,28 +162,29 @@ module Gui
                 barre.pack_end(aide_btn.tap { |aide_btn|
                     aide_btn.always_show_image = true
                     aide_btn.signal_connect("clicked") { |aide_btn|
-                        if(app.utilisateur.credit < CREDIT_AIDE) then
-                            infobar(MessageCredit.new(self))
-                        else
                             aide_btn.sensitive = false
                             aide_tab = []
                             Aide.detecter(grille, aide_tab)
-                            if(aide_tab.length == 0) then
-                                infobar(Gtk::InfoBar.new.tap { |info|
-                                    info.content_area.add(
-                                        Gtk::Label.new.tap { |label|
-                                        label.markup = "<b>Aucune situation " +
-                                            "détectée</b>"
-                                        label.show
-                                    })
-                                    info.show_close_button = true
-                                    info.signal_connect("response") {
-                                        @infobar = nil
-                                        self.remove(info)
-                                        aide_btn.sensitive = true
-                                    }
-                                    info.show
+                        if(aide_tab.length == 0) then
+                            infobar(Gtk::InfoBar.new.tap { |info|
+                                info.content_area.add(
+                                    Gtk::Label.new.tap { |label|
+                                    label.markup = "<b>Aucune situation " +
+                                        "détectée</b>"
+                                    label.show
                                 })
+                                info.show_close_button = true
+                                info.signal_connect("response") {
+                                    @infobar = nil
+                                    self.remove(info)
+                                    aide_btn.sensitive = true
+                                }
+                                info.show
+                            })
+                        else
+                            if(app.utilisateur.credit < CREDIT_AIDE) then
+                                infobar(MessageCredit.new(self))
+                                aide_btn.sensitive = true
                             else
                                 aide = aide_tab[rand(aide_tab.length)]
                                 gg.aide(aide.caseC.ligne, aide.caseC.colonne)
@@ -193,9 +200,18 @@ module Gui
                                     info.signal_connect("response") {|info, rep|
                                         case rep
                                         when 1 then
-                                            label.markup = "<b>Une aide " +
-                                                "disponnible</b>\n" +
-                                                aide.chaine
+                                            if(app.utilisateur.credit <
+                                                CREDIT_AIDE) then
+                                                infobar(MessageCredit.new(self))
+                                                gg.aide(-1, -1)
+                                            else
+                                                label.markup = "<b>Une aide " +
+                                                    "disponnible</b>\n" +
+                                                    aide.chaine
+                                                app.utilisateur.credit -=
+                                                    CREDIT_AIDE
+                                                update_titlebar()
+                                            end
                                         when Gtk::ResponseType::CLOSE then
                                             @infobar = nil
                                             self.remove(info)
@@ -205,6 +221,8 @@ module Gui
                                     }
                                     info.show
                                 })
+                                app.utilisateur.credit -= CREDIT_AIDE
+                                update_titlebar()
                             end
                         end
                     }
@@ -246,6 +264,7 @@ module Gui
                 
                 barre.show
             }
+            update_titlebar()
             
             @historique.replay { |element|
                 grille.grille.grille[element.case_jeu.ligne
@@ -265,6 +284,13 @@ module Gui
             end
             @infobar = barre
             self.pack_start(barre)
+        end
+        
+        # Met à jour la barre de titre
+        def update_titlebar
+            @titlebar.subtitle = "Niveau #{@grille.solution.numero} · " +
+                "Crédit : #{@app.utilisateur.credit}"
+            return self
         end
         
     end
