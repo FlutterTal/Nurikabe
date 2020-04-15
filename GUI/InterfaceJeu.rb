@@ -34,7 +34,7 @@ module Gui
         end
     
         # @infobar  => Barre d'info actuelle
-        # @temps    => Temps écoulé
+        # @tuple_temps    => [Numéro, temps écoulé]
         
         ## Barre de titre associée à l'interface de jeu.
         attr_reader :titlebar
@@ -75,9 +75,22 @@ module Gui
             self.pack_end(gg)
             @historique = gg.historique
             
-            chrono = Chrono.new
-            chrono.ajouterObserver(self)
-            @temps = 0
+            chrono = nil
+            if(grille.solution.mode == "Arcade") then
+            
+                chrono = Chrono.new
+                chrono.ajouterObserver(self)
+                @tuple_temps = app.utilisateur.grilleArcadeEnCours.find { |t|
+                    t[0] == grille.solution.numero
+                }
+                if(@tuple_temps) then
+                    chrono.ecoule = @tuple_temps[1]
+                else
+                    @tuple_temps = [grille.solution.numero, 0]
+                    app.utilisateur.grilleArcadeEnCours << @tuple_temps
+                end
+                
+            end
             
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
                 barre.title = "Nurikabe"
@@ -153,6 +166,8 @@ module Gui
                                             gg.erreurs = grille.locErreur
                                             if(grille.solution.mode == "Aventure") then
                                                 app.utilisateur.credit -= CREDIT_VERIF
+                                            elsif(grille.solution.mode == "Arcade") then
+                                                chrono.ecoule += TEMPS_VERIF
                                             end
                                             update_titlebar()
                                         end
@@ -164,6 +179,8 @@ module Gui
                             })
                             if(grille.solution.mode == "Aventure") then
                                 app.utilisateur.credit -= CREDIT_VERIF
+                            elsif(grille.solution.mode == "Arcade") then
+                                chrono.ecoule += TEMPS_VERIF
                             end
                             update_titlebar()
                         end
@@ -219,6 +236,8 @@ module Gui
                                                 label.markup = "<b>Une aide disponnible</b>\n#{aide.chaine}"
                                                 if(grille.solution.mode == "Aventure") then
                                                     app.utilisateur.credit -= CREDIT_AIDE
+                                                elsif(grille.solution.mode == "Arcade") then
+                                                    chrono.ecoule += TEMPS_AIDE
                                                 end
                                                 update_titlebar()
                                             end
@@ -233,6 +252,8 @@ module Gui
                                 })
                                 if(grille.solution.mode == "Aventure") then
                                     app.utilisateur.credit -= CREDIT_AIDE
+                                elsif(grille.solution.mode == "Arcade") then
+                                    chrono.ecoule += TEMPS_AIDE
                                 end
                                 update_titlebar()
                             end
@@ -297,7 +318,7 @@ module Gui
             gg.update
             
             self.show
-            chrono.start
+            chrono.reprendre
         end
         
         ##
@@ -306,7 +327,7 @@ module Gui
         # Paramètres :
         # [+tps+]   Temps écoulé (Integer)
         def updateTemps(tps)
-            @temps = tps
+            @tuple_temps[1] = tps
             update_titlebar()
             return self
         end
@@ -330,7 +351,8 @@ module Gui
             when "Aventure" then
                 chaine += "Crédit : #{@app.utilisateur.credit}"
             when "Arcade" then
-                chaine += "%02d:%02d" % [@temps / 60, @temps % 60]
+                chaine += "%02d:%02d" % [@tuple_temps[1] / 60,
+                                         @tuple_temps[1] % 60]
             end
             @titlebar.subtitle = chaine
             return self
