@@ -95,6 +95,14 @@ module Sauvegarde
         def fin?
             return @index == @historique.size
         end
+        
+        ##
+        # Vide l'historique
+        def reinitialiser
+            @historique.delete_if { |e| true }
+            @index = 0
+            return self
+        end
 
         ##
         # vrai si l'historique est vide

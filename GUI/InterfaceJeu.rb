@@ -133,6 +133,21 @@ module Gui
                 barre.pack_end(Gtk::MenuButton.new.tap { |bouton|
                     bouton.image = Gtk::Image.new(
                         icon_name: 'open-menu-symbolic')
+                    bouton.popover = Gtk::PopoverMenu.new.tap { |menu|
+                        menu.add(Gtk::Box.new(:vertical).tap { |boite|
+                            boite.pack_start(Gtk::Button.new(
+                                label: "Réinitialiser").tap { |bouton|
+                                bouton.relief = Gtk::ReliefStyle::NONE
+                                bouton.signal_connect("clicked") {
+                                    grille.reinitialiserGrille
+                                    @historique.reinitialiser
+                                    gg.update
+                                }
+                                bouton.show
+                            })
+                            boite.show
+                        })
+                    }
                     bouton.show
                 })
                 verifier = Gtk::Button.new(icon_name: 'checkmark')
