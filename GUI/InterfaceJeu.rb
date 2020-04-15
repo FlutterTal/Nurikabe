@@ -290,7 +290,7 @@ module Gui
                 gg.on_update {
                     grille.verifErreur
                     if(grille.grilleTerminee?) then
-                        chrono.stop
+                        chrono.stop if(chrono)
                         gg.desactiver
                         annuler.sensitive = false
                         refaire.sensitive = false
@@ -341,7 +341,7 @@ module Gui
             gg.update
             
             self.show
-            chrono.reprendre if(grille.solution.mode == "Arcade")
+            chrono.reprendre if(chrono)
         end
         
         ##
