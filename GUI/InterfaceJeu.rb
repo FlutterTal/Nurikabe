@@ -145,6 +145,14 @@ module Gui
                                 }
                                 bouton.show
                             })
+                            boite.pack_start(Gtk::Button.new(
+                                label: "Tableau des scores").tap { |bouton|
+                                bouton.relief = Gtk::ReliefStyle::NONE
+                                bouton.signal_connect("clicked") {
+                                    
+                                }
+                                bouton.show
+                            }) if(grille.solution.mode == "Arcade")
                             boite.show
                         })
                     }
@@ -333,7 +341,7 @@ module Gui
             gg.update
             
             self.show
-            chrono.reprendre
+            chrono.reprendre if(grille.solution.mode == "Arcade")
         end
         
         ##
