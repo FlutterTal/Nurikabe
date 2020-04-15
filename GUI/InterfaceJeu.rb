@@ -9,6 +9,29 @@ module Gui
     # Interface de jeu contenant une GGrille.
     class InterfaceJeu < Gtk::Box
     
+        ##
+        # Message affiché quand le joueur manque de crédit.
+        class MessageCredit < Gtk::InfoBar
+            
+            ##
+            # Crée un message alertant le joueur qu'il manque de crédit.
+            #
+            # Paramètres :
+            # [+parent+]    Parent
+            def initialize(parent)
+                super()
+                self.content_area.add(Gtk::Label.new.tap { |label|
+                    label.markup = "<b>Pas assez de crédit</b>"
+                    label.show
+                })
+                self.show_close_button = true
+                self.signal_connect("response") { parent.remove(self) }
+                self.message_type = Gtk::MessageType::ERROR
+                self.show
+            end
+            
+        end
+    
         # @infobar  => Barre d'info actuelle
         
         ## Barre de titre associée à l'interface de jeu.
@@ -16,6 +39,12 @@ module Gui
         
         ## Historique de la grille
         attr_reader :historique
+        
+        ## Coût d'une vérification
+        CREDIT_VERIF = 2
+        
+        ## Coût d'une aide
+        CREDIT_AIDE = 4
         
         ##
         # Crée une interface de jeu pour la grille donnée.
@@ -79,32 +108,46 @@ module Gui
                 verifier = Gtk::Button.new(icon_name: 'checkmark')
                 barre.pack_end(verifier.tap { |verifier|
                     verifier.signal_connect("clicked") {
-                        infobar(Gtk::InfoBar.new.tap { |info|
-                            info.content_area.add(Gtk::Label.new.tap { |label|
-                                if(grille.erreur == 0) then
-                                    label.markup = "<b>Aucune erreur</b>"
-                                else
-                                    label.markup = "<b>#{grille.erreur} " +
-                                        "erreur" +
-                                        (grille.erreur > 1 ? 's' : '') + "</b>"
+                        if(app.utilisateur.credit < CREDIT_VERIF) then
+                            infobar(MessageCredit.new(self))
+                        else
+                            infobar(Gtk::InfoBar.new.tap { |info|
+                                info.content_area.add(
+                                    Gtk::Label.new.tap { |label|
+                                    if(grille.erreur == 0) then
+                                        label.markup = "<b>Aucune erreur</b>"
+                                    else
+                                        label.markup = "<b>#{grille.erreur} " +
+                                            "erreur" +
+                                            (grille.erreur > 1 ? 's' : '') +
+                                            "</b>"
+                                    end
+                                    label.show
+                                })
+                                if(grille.erreur == 1) then
+                                    info.add_button("Afficher la case", 1)
+                                elsif(grille.erreur > 1) then
+                                    info.add_button("Afficher les cases", 1)
                                 end
-                                label.show
+                                info.show_close_button = true
+                                info.signal_connect("response") { |info, rep|
+                                    if(rep == 1) then
+                                        if(app.utilisateur.credit <
+                                            CREDIT_VERIF) then
+                                            infobar(MessageCredit.new(self))
+                                        else
+                                            gg.erreurs = grille.locErreur
+                                            app.utilisateur.credit -=
+                                                CREDIT_VERIF
+                                        end
+                                    end
+                                    @infobar = nil
+                                    self.remove(info)
+                                }
+                                info.show
                             })
-                            if(grille.erreur == 1) then
-                                info.add_button("Afficher la case", 1)
-                            elsif(grille.erreur > 1) then
-                                info.add_button("Afficher les cases", 1)
-                            end
-                            info.show_close_button = true
-                            info.signal_connect("response") { |info, reponse|
-                                if(reponse == 1) then
-                                    gg.erreurs = grille.locErreur
-                                end
-                                @infobar = nil
-                                self.remove(info)
-                            }
-                            info.show
-                        })
+                            app.utilisateur.credit -= CREDIT_VERIF
+                        end
                     }
                     verifier.show
                 })
@@ -113,51 +156,56 @@ module Gui
                 barre.pack_end(aide_btn.tap { |aide_btn|
                     aide_btn.always_show_image = true
                     aide_btn.signal_connect("clicked") { |aide_btn|
-                        aide_btn.sensitive = false
-                        aide_tab = []
-                        Aide.detecter(grille, aide_tab)
-                        if(aide_tab.length == 0) then
-                            infobar(Gtk::InfoBar.new.tap { |info|
-                                info.content_area.add(
-                                    Gtk::Label.new.tap { |label|
-                                    label.markup = "<b>Aucune situation " +
-                                        "détectée</b>"
-                                    label.show
-                                })
-                                info.show_close_button = true
-                                info.signal_connect("response") {
-                                    @infobar = nil
-                                    self.remove(info)
-                                    aide_btn.sensitive = true
-                                }
-                                info.show
-                            })
+                        if(app.utilisateur.credit < CREDIT_AIDE) then
+                            infobar(MessageCredit.new(self))
                         else
-                            aide = aide_tab[rand(aide_tab.length)]
-                            gg.aide(aide.caseC.ligne, aide.caseC.colonne)
-                            infobar(Gtk::InfoBar.new.tap { |info|
-                                label = Gtk::Label.new
-                                info.content_area.add(label.tap { |label|
-                                    label.markup = "<b>Une aide " +
-                                        "disponnible</b>"
-                                    label.show
-                                })
-                                info.show_close_button = true
-                                info.add_button("Détails", 1)
-                                info.signal_connect("response") { |info, rep|
-                                    case rep
-                                    when 1 then
-                                        label.markup = "<b>Une aide " +
-                                            "disponnible</b>\n#{aide.chaine}"
-                                    when Gtk::ResponseType::CLOSE then
+                            aide_btn.sensitive = false
+                            aide_tab = []
+                            Aide.detecter(grille, aide_tab)
+                            if(aide_tab.length == 0) then
+                                infobar(Gtk::InfoBar.new.tap { |info|
+                                    info.content_area.add(
+                                        Gtk::Label.new.tap { |label|
+                                        label.markup = "<b>Aucune situation " +
+                                            "détectée</b>"
+                                        label.show
+                                    })
+                                    info.show_close_button = true
+                                    info.signal_connect("response") {
                                         @infobar = nil
                                         self.remove(info)
-                                        gg.aide(-1, -1)
                                         aide_btn.sensitive = true
-                                    end
-                                }
-                                info.show
-                            })
+                                    }
+                                    info.show
+                                })
+                            else
+                                aide = aide_tab[rand(aide_tab.length)]
+                                gg.aide(aide.caseC.ligne, aide.caseC.colonne)
+                                infobar(Gtk::InfoBar.new.tap { |info|
+                                    label = Gtk::Label.new
+                                    info.content_area.add(label.tap { |label|
+                                        label.markup = "<b>Une aide " +
+                                            "disponnible</b>"
+                                        label.show
+                                    })
+                                    info.show_close_button = true
+                                    info.add_button("Détails", 1)
+                                    info.signal_connect("response") {|info, rep|
+                                        case rep
+                                        when 1 then
+                                            label.markup = "<b>Une aide " +
+                                                "disponnible</b>\n" +
+                                                aide.chaine
+                                        when Gtk::ResponseType::CLOSE then
+                                            @infobar = nil
+                                            self.remove(info)
+                                            gg.aide(-1, -1)
+                                            aide_btn.sensitive = true
+                                        end
+                                    }
+                                    info.show
+                                })
+                            end
                         end
                     }
                     aide_btn.show
