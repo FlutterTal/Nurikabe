@@ -129,13 +129,15 @@ class Nurikabe < Gtk::Application
     end
     
     ##
-    # Sauvegarde la grille actuelle et met +grille_actuelle+ à +nil+.
+    # Sauvegarde la grille et l'utilisateur actuels et met +grille_actuelle+ à
+    # +nil+.
     def grille_deconnecter
         if(@grille_actuelle) then
             @historique.fermer
             @historique = nil
             @grille_actuelle = nil
         end
+        @utilisateur.sauvegarde if(@utilisateur)
     end
     
     private
