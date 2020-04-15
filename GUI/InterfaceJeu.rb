@@ -2,6 +2,7 @@ require 'gtk3'
 require_relative 'GGrille.rb'
 require_relative 'BoutonRetour.rb'
 require_relative '../Aide/Aide.rb'
+require_relative '../Utils/Chrono.rb'
 
 module Gui
     
@@ -33,6 +34,7 @@ module Gui
         end
     
         # @infobar  => Barre d'info actuelle
+        # @temps    => Temps écoulé
         
         ## Barre de titre associée à l'interface de jeu.
         attr_reader :titlebar
@@ -40,11 +42,17 @@ module Gui
         ## Historique de la grille
         attr_reader :historique
         
-        ## Coût d'une vérification
+        ## Coût d'une vérification en crédit (Integer)
         CREDIT_VERIF = 2
         
-        ## Coût d'une aide
+        ## Coût d'une verification en temps (Integer, secondes)
+        TEMPS_VERIF = 10
+        
+        ## Coût d'une aide en crédit (Integer)
         CREDIT_AIDE = 4
+        
+        ## Coût d'une aide en temps (Integer, secondes)
+        TEMPS_AIDE = 30
         
         ## Gain d'une victoire
         CREDIT_VICTOIRE = 10
@@ -66,6 +74,10 @@ module Gui
             self.pack_end(gg)
             @historique = gg.historique
             
+            chrono = Chrono.new
+            chrono.ajouterObserver(self)
+            @temps = 0
+            
             @titlebar = Gtk::HeaderBar.new.tap { |barre|
                 barre.title = "Nurikabe"
                 barre.show_close_button = true
@@ -73,7 +85,7 @@ module Gui
                     bouton.signal_connect("clicked") {
                         case grille.solution.mode
                         when "Aventure" then app.aventure
-                        when "Arcade" then app.aventure
+                        when "Arcade" then app.arcade
                         else app.accueil
                         end
                     }
@@ -112,7 +124,8 @@ module Gui
                 verifier = Gtk::Button.new(icon_name: 'checkmark')
                 barre.pack_end(verifier.tap { |verifier|
                     verifier.signal_connect("clicked") {
-                        if(app.utilisateur.credit < CREDIT_VERIF) then
+                        if(grille.solution.mode == "Aventure" &&
+                            app.utilisateur.credit < CREDIT_VERIF) then
                             infobar(MessageCredit.new(self))
                         else
                             infobar(Gtk::InfoBar.new.tap { |info|
@@ -121,10 +134,7 @@ module Gui
                                     if(grille.erreur == 0) then
                                         label.markup = "<b>Aucune erreur</b>"
                                     else
-                                        label.markup = "<b>#{grille.erreur} " +
-                                            "erreur" +
-                                            (grille.erreur > 1 ? 's' : '') +
-                                            "</b>"
+                                        label.markup = "<b>#{grille.erreur} erreur#{grille.erreur > 1 ? 's' : ''}</b>"
                                     end
                                     label.show
                                 })
@@ -136,13 +146,13 @@ module Gui
                                 info.show_close_button = true
                                 info.signal_connect("response") { |info, rep|
                                     if(rep == 1) then
-                                        if(app.utilisateur.credit <
-                                            CREDIT_VERIF) then
+                                        if(grille.solution.mode == "Aventure" && app.utilisateur.credit < CREDIT_VERIF) then
                                             infobar(MessageCredit.new(self))
                                         else
                                             gg.erreurs = grille.locErreur
-                                            app.utilisateur.credit -=
-                                                CREDIT_VERIF
+                                            if(grille.solution.mode == "Aventure") then
+                                                app.utilisateur.credit -= CREDIT_VERIF
+                                            end
                                             update_titlebar()
                                         end
                                     end
@@ -151,7 +161,9 @@ module Gui
                                 }
                                 info.show
                             })
-                            app.utilisateur.credit -= CREDIT_VERIF
+                            if(grille.solution.mode == "Aventure") then
+                                app.utilisateur.credit -= CREDIT_VERIF
+                            end
                             update_titlebar()
                         end
                     }
@@ -169,8 +181,7 @@ module Gui
                             infobar(Gtk::InfoBar.new.tap { |info|
                                 info.content_area.add(
                                     Gtk::Label.new.tap { |label|
-                                    label.markup = "<b>Aucune situation " +
-                                        "détectée</b>"
+                                    label.markup = "<b>Aucune situation détectée</b>"
                                     label.show
                                 })
                                 info.show_close_button = true
@@ -182,7 +193,8 @@ module Gui
                                 info.show
                             })
                         else
-                            if(app.utilisateur.credit < CREDIT_AIDE) then
+                            if(grille.solution.mode == "Aventure" &&
+                                app.utilisateur.credit < CREDIT_AIDE) then
                                 infobar(MessageCredit.new(self))
                                 aide_btn.sensitive = true
                             else
@@ -191,8 +203,7 @@ module Gui
                                 infobar(Gtk::InfoBar.new.tap { |info|
                                     label = Gtk::Label.new
                                     info.content_area.add(label.tap { |label|
-                                        label.markup = "<b>Une aide " +
-                                            "disponnible</b>"
+                                        label.markup = "<b>Une aide disponnible</b>"
                                         label.show
                                     })
                                     info.show_close_button = true
@@ -200,16 +211,14 @@ module Gui
                                     info.signal_connect("response") {|info, rep|
                                         case rep
                                         when 1 then
-                                            if(app.utilisateur.credit <
-                                                CREDIT_AIDE) then
+                                            if(grille.solution.mode == "Aventure" && app.utilisateur.credit < CREDIT_AIDE) then
                                                 infobar(MessageCredit.new(self))
                                                 gg.aide(-1, -1)
                                             else
-                                                label.markup = "<b>Une aide " +
-                                                    "disponnible</b>\n" +
-                                                    aide.chaine
-                                                app.utilisateur.credit -=
-                                                    CREDIT_AIDE
+                                                label.markup = "<b>Une aide disponnible</b>\n#{aide.chaine}"
+                                                if(grille.solution.mode == "Aventure") then
+                                                    app.utilisateur.credit -= CREDIT_AIDE
+                                                end
                                                 update_titlebar()
                                             end
                                         when Gtk::ResponseType::CLOSE then
@@ -221,7 +230,9 @@ module Gui
                                     }
                                     info.show
                                 })
-                                app.utilisateur.credit -= CREDIT_AIDE
+                                if(grille.solution.mode == "Aventure") then
+                                    app.utilisateur.credit -= CREDIT_AIDE
+                                end
                                 update_titlebar()
                             end
                         end
@@ -234,6 +245,7 @@ module Gui
                 gg.on_update {
                     grille.verifErreur
                     if(grille.grilleTerminee?) then
+                        chrono.stop
                         gg.desactiver
                         annuler.sensitive = false
                         refaire.sensitive = false
@@ -247,7 +259,9 @@ module Gui
                             grille.solution.numero ||
                             boite_terminee_affichee) then
                             grille.grilleTerminee(app.utilisateur)
-                            app.utilisateur.credit += CREDIT_VICTOIRE
+                            if(grille.solution.mode == "Aventure") then
+                                app.utilisateur.credit += CREDIT_VICTOIRE
+                            end
                             update_titlebar()
                             Gtk::MessageDialog.new(
                                 title: "Gagné",
@@ -282,6 +296,18 @@ module Gui
             gg.update
             
             self.show
+            chrono.start
+        end
+        
+        ##
+        # Appelé par le chronomètre.
+        #
+        # Paramètres :
+        # [+tps+]   Temps écoulé (Integer)
+        def updateTemps(tps)
+            @temps = tps
+            update_titlebar()
+            return self
         end
         
         private
@@ -297,8 +323,15 @@ module Gui
         
         # Met à jour la barre de titre
         def update_titlebar
-            @titlebar.subtitle = "Niveau #{@grille.solution.numero} · " +
-                "Crédit : #{@app.utilisateur.credit}"
+            chaine = "#{@grille.solution.mode} · " +
+                "Niveau #{@grille.solution.numero} · "
+            case @grille.solution.mode
+            when "Aventure" then
+                chaine += "Crédit : #{@app.utilisateur.credit}"
+            when "Arcade" then
+                chaine += "%02d:%02d" % [@temps / 60, @temps % 60]
+            end
+            @titlebar.subtitle = chaine
             return self
         end
         
