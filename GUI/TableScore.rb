@@ -8,12 +8,11 @@ module Gui
         
         ##
         # Méthode permettant de créer le tableau de scores.
-        def TableScore.creer
-            table = new(6, 2, true)
-            table.attach("Utilisateur", 0, 1, 0, 1)
-            table.attach("Temps", 1, 2, 0, 1)
-            table.show
-            return table
+        def new
+            super(6, 2, true)
+            self.attach("Utilisateur", 0, 1, 0, 1)
+            self.attach("Temps", 1, 2, 0, 1)
+            self.show
         end
     end
     

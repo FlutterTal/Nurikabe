@@ -26,7 +26,7 @@ module Sauvegarde
         # [+grille+] GrilleJouable
         def initialize(utilisateur, grille)
             @grille = grille
-            nom = "Hist_#{utilisateur.nom}_#{grille.solution.numero}"
+            nom = "Hist_#{utilisateur.nom}_#{grille.solution.mode}_#{grille.solution.numero}"
             if File.exist?(nom)
                 @fichier = File.new(nom, "r+")
                 @historique = Marshal.load(@fichier)
