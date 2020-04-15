@@ -61,6 +61,38 @@ module Gui
             return self
         end
         
+        ##
+        # Désactive toutes les cases.
+        def desactiver
+            self.each { |c| c.sensitive = false }
+            return self
+        end
+        
+        ##
+        # Affiche les erreurs données.
+        #
+        # Paramètres :
+        # [+erreurs+]   Array de [ligne, colonne]
+        def erreurs=(erreurs)
+            self.each { |c|
+                c.erreur = erreurs.include? [c.case.ligne, c.case.colonne]
+            }
+            return self
+        end
+        
+        ##
+        # Met en surbrillance la case de coordonnées données.
+        #
+        # Paramètres :
+        # [+x+] Coordonnée horizontale
+        # [+y+] Coordonnée verticale
+        def aide(x, y)
+            self.each { |c|
+                c.aide = c.case.ligne == x && c.case.colonne == y
+            }
+            return self
+        end
+        
     end
 
 end

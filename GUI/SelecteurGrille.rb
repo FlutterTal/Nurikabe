@@ -21,6 +21,8 @@ module Gui
             # [+app+]       Nurikabe
             def initialize(grille, app)
                 super(:vertical)
+                self.valign = Gtk::Align::CENTER
+                self.halign = Gtk::Align::CENTER
                 self.pack_start(Gtk::Button.new.tap { |bouton|
                     bouton.signal_connect("clicked") { app.grille(grille) }
                     bouton.add(Gtk::Label.new.tap { |label|
@@ -29,12 +31,33 @@ module Gui
                     })
                     bouton.width_request = 64
                     bouton.height_request = 64
+                    bouton.margin_bottom = 10
+                    if(grille.solution.mode == "Aventure" &&
+                        grille.solution.numero >
+                        app.utilisateur.aventure + 1) then
+                        bouton.sensitive = false
+                    end
                     bouton.show
                 })
-                self.pack_start(Gtk::Label.new.tap { |label|
-                    label.text = "#{grille.solution.taille_ligne}" +
-                        "x#{grille.solution.taille_colonne}"
-                    label.show
+                self.pack_start(Gtk::Box.new(:horizontal).tap { |boite|
+                    boite.pack_start(Gtk::Label.new.tap { |label|
+                        label.text = "#{grille.solution.taille_ligne}" +
+                            "x#{grille.solution.taille_colonne}"
+                        label.expand = true
+                        label.show
+                    })
+                    if(grille.solution.mode == "Arcade" &&
+                        app.utilisateur.grilleArcade.include?(
+                        grille.solution.numero) || grille.solution.mode ==
+                        "Aventure" && app.utilisateur.aventure >=
+                        grille.solution.numero) then
+                        boite.pack_start(
+                            Gtk::Image.new(icon_name: 'checkmark',
+                                           size: :button).tap { |icone|
+                            icone.show
+                        })
+                    end
+                    boite.show
                 })
                 self.show
             end

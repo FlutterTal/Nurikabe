@@ -17,7 +17,6 @@ class Nurikabe < Gtk::Application
     # Application
     @@app = nil
     
-    # @fenetre          => Fenêtre principale de l'application
     # @grille_actuelle  => GrilleJouable actuelle
     # @historique       => Historique de la grille actuelle
 
@@ -34,6 +33,9 @@ class Nurikabe < Gtk::Application
     
     ## Utilisateur courant
     attr_reader :utilisateur
+    
+    ## Fenêtre principale
+    attr_reader :fenetre
     
     ##
     # Crée une nouvelle application.

@@ -23,6 +23,7 @@ module Gui
             }
             self.signal_connect("destroy") {
                 app.grille_deconnecter
+                app.utilisateur.sauvegarde
                 app.quit
             }
             self.show

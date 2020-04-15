@@ -1,3 +1,6 @@
+require_relative '../Grille/CaseJouable.rb'
+require_relative '../Grille/CaseNumero.rb'
+
 ##
 # Techniques d'aides de démarrage
 #
@@ -19,7 +22,7 @@ class StartingTechniques
 
       tabJeu.each { |ligne|
           ligne.each { |cases|
-            if((cases.class() == CaseNumero) && (cases.numero().to_i() == 1))
+            if((cases.class() == Grille::CaseNumero) && (cases.numero().to_i() == 1))
               tab.push(Aide.creer(cases, "Contient 1"))
             end
           }
@@ -44,8 +47,8 @@ class StartingTechniques
       # Analyse horizontale
       tabJeu.each { |tab|
           for i in (0..(taille_ligne - 3))
-            if (tab[i].class == CaseNumero) && (tab[i+1].class == CaseJouable) && (tab[i+2].class == CaseNumero)
-              tab.push(Aide.creer(tabJeu[i][j], "Case vide horizontale"))
+            if (tab[i].class == Grille::CaseNumero) && (tab[i+1].class == Grille::CaseJouable) && (tab[i+2].class == Grille::CaseNumero)
+              tab.push(Aide.creer(tabJeu[i], "Case vide horizontale"))
             end
           end
       }
@@ -53,7 +56,7 @@ class StartingTechniques
       # Analyse verticale
       for i in (0..taille_ligne) # Parcours colonne
         for j in (0..(taille_colonne - 3)) # Parcours ligne
-          if (tabJeu[j][i].class == CaseNumero) && (tabJeu[j+1][i].class == CaseJouable) && (tabJeu[j+2][i].class == CaseNumero)
+          if (tabJeu[j][i].class == Grille::CaseNumero) && (tabJeu[j+1][i].class == Grille::CaseJouable) && (tabJeu[j+2][i].class == Grille::CaseNumero)
             tab.push(Aide.creer(tabJeu[i][j], "Case vide verticale"))
           end
         end
@@ -78,10 +81,10 @@ class StartingTechniques
 
       for i in (0..(taille_colonne - 2)) # Parcours ligne
         for j in (0..(taille_ligne - 2)) # Parcours colonne
-          if (tabJeu[i][j].class == CaseNumero) && (tabJeu[i+1][j+1].class == CaseNumero) && (tabJeu[i+1][j].class == CaseJouable) && (tabJeu[i][j+1].class == CaseJouable)
+          if (tabJeu[i][j].class == Grille::CaseNumero) && (tabJeu[i+1][j+1].class == Grille::CaseNumero) && (tabJeu[i+1][j].class == Grille::CaseJouable) && (tabJeu[i][j+1].class == Grille::CaseJouable)
             tab.push(Aide.creer(tabJeu[i][j], "Case diagonale \\"))
           end
-          if (tabJeu[i][j].class == CaseJouable) && (tabJeu[i+1][j+1].class == CaseJouable) && (tabJeu[i+1][j].class == CaseNumero) && (tabJeu[i][j+1].class == CaseNumero)
+          if (tabJeu[i][j].class == Grille::CaseJouable) && (tabJeu[i+1][j+1].class == Grille::CaseJouable) && (tabJeu[i+1][j].class == Grille::CaseNumero) && (tabJeu[i][j+1].class == Grille::CaseNumero)
             tab.push(Aide.creer(tabJeu[i][j], "Case diagonale /"))
           end
         end

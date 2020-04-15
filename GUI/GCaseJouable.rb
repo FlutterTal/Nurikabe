@@ -54,7 +54,23 @@ module Gui
             when :BLANC then marquer_blanche
             when :MARK then marquer_point
             end
+            self.style_context.remove_class("case_erreur")
+            self.style_context.remove_class("case_indice")
             notifier()
+            return self
+        end
+        
+        ##
+        # Détermine si la case a une erreur.
+        #
+        # Paramètres :
+        # [+bool+]  Booléen
+        def erreur=(bool)
+            if(bool) then
+                self.style_context.add_class("case_erreur")
+            else
+                self.style_context.remove_class("case_erreur")
+            end
             return self
         end
         

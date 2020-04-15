@@ -1,5 +1,7 @@
 require_relative 'GrilleStatique.rb'
 require_relative 'Grille.rb'
+require_relative 'CaseNumero.rb'
+require_relative 'CaseJouable.rb'
 
 require_relative '../Utilisateur/Utilisateur.rb'
 require_relative '../Sauvegarde/Historique.rb'
@@ -50,8 +52,8 @@ module Grille
                 ligneGrille.clear
             }
 
-            @locErreur = Array.new()
-            @erreur = nil
+            @locErreur = []
+            @erreur = 0
             @classement = Classement::Classement.Creer(@solution)
 
             @terminee = false
@@ -61,9 +63,10 @@ module Grille
         ##
         # Donne le nombre d'erreur dans une grille et leurs position
         def verifErreur()
+            @locErreur = []
             self.grille.grille.each{ |ligne|
                 ligne.each{ |cases|
-                    if !self.verifCase(cases) 
+                    if !self.verifCase(cases, false) 
                         @locErreur.push([cases.ligne,cases.colonne])
                     end
                 }
@@ -72,11 +75,25 @@ module Grille
         end
 
         ##
-        # Vérifie si une case est correct ou non par rapport à la solution
-        def verifCase(uneCase)
-            if uneCase.class == CaseJouable && uneCase.etatCase != self.solution.grilleS.grille[uneCase.ligne][uneCase.colonne].etatCase
-                return false
-            else   
+        # Vérifie si une case est correct ou non par rapport à la solution.
+        #
+        # Si +verif_blanches+ est à +true+ les cases blanches sont vérifiées,
+        # sinon +true+ est renvoyé.
+        def verifCase(uneCase, verif_blanches)
+            if uneCase.kind_of? CaseJouable then
+                case uneCase.etatCase
+                when :NOIR then
+                    return @solution.grilleS.grille[uneCase.ligne][uneCase.colonne].etatCase == :NOIR
+                when :MARK then
+                    return @solution.grilleS.grille[uneCase.ligne][uneCase.colonne].etatCase == :BLANC
+                when :BLANC then
+                    if verif_blanches then
+                        return @solution.grilleS.grille[uneCase.ligne][uneCase.colonne].etatCase == :BLANC
+                    else
+                        return true
+                    end
+                end
+            else
                 return true
             end
         end
@@ -104,9 +121,9 @@ module Grille
         ##
         # Vérifie si la grille est terminée ou non
         def grilleTerminee?
-            if self.erreur == 0
-                self.terminee = true
-            end
+            @terminee = @grille.grille.all? { |ligne|
+                ligne.all? { |c| verifCase(c, true) }
+            }
             return self.terminee
         end
 

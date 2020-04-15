@@ -1,3 +1,6 @@
+require_relative '../Grille/CaseJouable.rb'
+require_relative '../Grille/CaseNumero.rb'
+
 ##
 # Techniques d'aides basiques
 #
@@ -23,34 +26,34 @@ class BasicTechniques
 
       (0..(taille_ligne - 2)).each { |j| # Parcours colonne
 
-        if (tabJeu[i][j].class == CaseJouable) && (tabJeu[i][j].etatCase() == :BLANC)
+        if (tabJeu[i][j].class == Grille::CaseJouable) && (tabJeu[i][j].etatCase() == :BLANC)
 
           # ***** Tests existences des voisins *****
 
           nbVoisins = 0
 
-          if ((i - 1) >= 0) && (tabJeu[i - 1][j].class == CaseJouable)
+          if ((i - 1) >= 0) && (tabJeu[i - 1][j].class == Grille::CaseJouable)
             nbVoisins += 1
             bCaseSup = true
           else
             bCaseSup = false
           end
 
-          if ((i + 1) < taille_colonne) && (tabJeu[i + 1][j].class == CaseJouable)
+          if ((i + 1) < taille_colonne) && (tabJeu[i + 1][j].class == Grille::CaseJouable)
             nbVoisins += 1
             bCaseInf = true
           else
             bCaseInf = false
           end
 
-          if ((j + 1) < taille_ligne) && (tabJeu[i][j + 1].class == CaseJouable)
+          if ((j + 1) < taille_ligne) && (tabJeu[i][j + 1].class == Grille::CaseJouable)
             nbVoisins += 1
             bCaseD = true
           else
             bCaseD = false
           end
 
-          if ((j - 1) >= 0) && (tabJeu[i][j - 1].class == CaseJouable)
+          if ((j - 1) >= 0) && (tabJeu[i][j - 1].class == Grille::CaseJouable)
             nbVoisins += 1
             bCaseG = true
           else
@@ -107,7 +110,7 @@ class BasicTechniques
 
     (0..(taille_colonne - 2)).each { |i| # Parcours ligne
       (0..(taille_ligne - 2)).each { |j| # Parcours colonne
-        if (tabJeu[i][j].class == CaseJouable) && (tabJeu[i+1][j+1].class == CaseJouable) && (tabJeu[i][j+1].class == CaseJouable) && (tabJeu[i+1][j].class == CaseJouable)
+        if (tabJeu[i][j].class == Grille::CaseJouable) && (tabJeu[i+1][j+1].class == Grille::CaseJouable) && (tabJeu[i][j+1].class == Grille::CaseJouable) && (tabJeu[i+1][j].class == Grille::CaseJouable)
           if (tabJeu[i][j].etatCase() == :NOIR) && (tabJeu[i+1][j+1].etatCase() == :NOIR) && (tabJeu[i][j+1].etatCase() == :NOIR) && (tabJeu[i+1][j].etatCase() == :NOIR)
             tab.push(Aide.creer(tabJeu[i][j], "Mur trop large >= 2x2"))
           end
