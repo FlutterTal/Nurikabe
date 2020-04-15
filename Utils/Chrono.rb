@@ -2,6 +2,8 @@
 # Tout observateur de chronomètre doit posséder la methode updateTemps(tps)
 class Chrono
 
+    attr_accessor :ecoule
+    
 	def initialize()
 		@ecoule = 0
     	@observers = Array.new
