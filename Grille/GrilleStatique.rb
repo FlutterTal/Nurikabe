@@ -48,7 +48,7 @@ module Grille
 
 
             grille.each { |ligne|
-                newLingne = ligne.split(//).each { |item|
+                newLigne = ligne.split('.').each { |item|
                 if(item.to_i != 0)   
                     ligneGrille.push(CaseNumero.creer(item,@grilleS.grille.length,ligneGrille.length))
                 elsif(item == 'B' || item == 'N')
